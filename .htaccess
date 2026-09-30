@@ -1,0 +1,20 @@
+# Pengaturan server untuk hosting Apache/LiteSpeed (Hostinger).
+# HTTPS dipaksa lewat hPanel (Security → SSL → Force HTTPS), bukan dari file ini.
+
+# Jangan tampilkan daftar isi folder
+Options -Indexes
+
+# Sembunyikan folder .git jika ikut ter-deploy
+<IfModule mod_alias.c>
+  RedirectMatch 404 /\.git
+</IfModule>
+
+# Cache browser: gambar 30 hari, HTML selalu dicek ulang supaya perubahan langsung terlihat.
+# Sengaja tidak setahun: foto yang diganti dengan nama file sama tetap ter-update.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
