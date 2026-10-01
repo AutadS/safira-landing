@@ -39,12 +39,11 @@ em{font-style:italic}
 .serif{font-family:'Fraunces',Georgia,serif}
 
 /* split text */
-.w{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .05em .14em;margin:0 -.05em -.14em}
+.w{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .12em .14em .05em;margin:0 -.12em -.14em -.05em}
+.revealed .w{overflow:visible}
 .c{display:inline-block;will-change:transform}
 
-/* grain + vignette + cursor */
-.grain{position:fixed;inset:-50%;z-index:65;pointer-events:none;background:url(assets/grain.png) 0 0/128px 128px;animation:grain 1s steps(4) infinite}
-@keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-1%)}100%{transform:translate(1%,3%)}}
+/* vignette + cursor */
 .vignette{position:fixed;inset:0;z-index:21;pointer-events:none;background:radial-gradient(ellipse at 60% 45%,transparent 45%,rgba(14,2,3,.65))}
 .cursor{display:none}
 .has-cursor,.has-cursor *{cursor:none!important}
@@ -98,12 +97,10 @@ em{font-style:italic}
 .gate-hint{margin-top:30px;font-size:.84rem;color:rgba(197,163,130,.8)}
 .skip{position:fixed;right:var(--gutter);bottom:calc(22px + env(safe-area-inset-bottom));z-index:31;font-size:.8rem;letter-spacing:.06em;color:rgba(235,227,221,.55);padding:8px 2px;border-bottom:1px solid rgba(235,227,221,.2);transition:color .3s}
 .skip:hover{color:var(--cream)}
-.flash{position:fixed;inset:0;z-index:40;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 45%,#fff3e3,#f3c69a 45%,rgba(243,198,154,0) 75%)}
 .mark2d{position:fixed;z-index:20;right:12vw;top:50%;width:min(28vw,340px);translate:0 -50%;perspective:900px;display:none}
 .mark2d svg{width:100%;height:auto;fill:var(--cream);filter:drop-shadow(0 30px 50px rgba(0,0,0,.5))}
 .no-webgl .mark2d{display:block}
 .no-webgl #webgl{display:none}
-.portal2d{position:fixed;inset:0;z-index:25;pointer-events:none;visibility:hidden;clip-path:inset(50% 50% 50% 50% round 999px 999px 0 0);background:radial-gradient(circle at 50% 50%,#fff6e8 0%,#fad6aa 35%,#d67048 70%,#7a0c18 100%)}
 
 /* lobby */
 .lobby-pin{position:relative;height:var(--vh,100vh);overflow:hidden;background:var(--espresso)}
@@ -334,7 +331,7 @@ em{font-style:italic}
   .fab{right:16px;padding:12px 18px;font-size:.88rem}
 }
 @media (prefers-reduced-motion:reduce){
-  .grain,.btn-enter::after,.eyebrow::before,.scroll-cue i{animation:none}
+  .btn-enter::after,.eyebrow::before,.scroll-cue i{animation:none}
 }
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
@@ -350,7 +347,6 @@ em{font-style:italic}
   <symbol id="mark" viewBox="-40 -40 1225 1668"><path id="markPath" d="M5.42 1586.49C3.43 1585.49 1.67 1583.61 0.99 1581.76C0.36 1580.07 0.09 1525.8 0.68 1522.24C1.18 1519.28 2.55 1517.26 5.01 1515.87C6.83 1514.83 6.83 1514.83 402.5 1514.65C798.17 1514.48 798.17 1514.48 802.75 1513.75C809.67 1512.65 814.6 1511.47 820.5 1509.5C835.6 1504.46 848.39 1496.59 859.52 1485.5C875.4 1469.67 884.34 1450.49 886.49 1427.67C887.13 1420.82 887.13 1419.11 886.5 1412.67C885.68 1404.37 884.9 1400.34 882.66 1392.81C875.38 1368.45 857.82 1347.42 835.17 1335.97C822.82 1329.73 811.43 1326.59 797.83 1325.68C794.54 1325.46 680.16 1325.34 462.17 1325.34C244.62 1325.33 130.25 1325.22 127.83 1325C109.44 1323.33 93.59 1318.8 77.17 1310.52C55.91 1299.81 37.71 1283.57 24.1 1263.17C19.83 1256.77 13.69 1244.99 10.9 1237.83C7.2 1228.34 4.43 1217.75 2.8 1206.83C1.28 1196.66 1.34 1210.43 1.33 882.83C1.33 679.62 1.44 571.2 1.67 564.83C2.01 554.94 2.78 541.25 3.33 535C3.5 533.07 3.72 530.45 3.83 529.17C4.65 519.26 7.25 498.42 8.84 489C9.11 487.44 9.62 484.37 9.98 482.17C10.97 476.15 11.34 474.22 13.34 464.5C15.86 452.21 20.11 434.67 23.22 423.67C25.02 417.33 31.9 395.14 32.83 392.72C33.09 392.05 34.19 388.95 35.28 385.83C46.31 354.4 61.92 320.5 79.44 289.94C95.09 262.64 113.06 236.46 133.3 211.5C145.37 196.6 158.05 182.6 173.33 167.32C190.08 150.54 203.96 138.07 221 124.46C253.14 98.8 284.6 78.59 320.83 60.33C334.24 53.57 336.07 52.72 351.83 45.82C379.95 33.53 414.98 22.03 445.67 15C477.9 7.61 507.27 3.44 542.17 1.29C551.15 0.74 585.37 0.53 595.57 0.97C609.14 1.55 631.5 3.17 635 3.83C635.46 3.92 637.48 4.15 639.5 4.34C646.88 5.05 662.48 7.42 675.98 9.87C719.46 17.78 760.53 30.35 802.17 48.49C820.95 56.68 848.94 71.15 866.4 81.71C918.63 113.3 964.61 151.89 1004.19 197.35C1054.29 254.9 1092.49 322.08 1116.1 394.17C1122.37 413.31 1126.51 428.41 1130.99 448.5C1131.56 451.07 1132.17 453.77 1132.35 454.5C1133.02 457.27 1134.99 467.69 1136.16 474.67C1136.46 476.41 1136.84 478.66 1137.01 479.67C1137.89 484.72 1139.08 493.37 1140.65 506C1141.55 513.23 1142.58 524.73 1143 532.17C1143.18 535.47 1143.42 538.54 1143.53 539C1144.28 542.15 1144.44 572.5 1144.58 740.67C1144.73 925.92 1144.69 932.76 1143.46 941.83C1141.17 958.71 1137.49 971.45 1131.03 984.83C1126.61 993.99 1122.43 1000.93 1116.97 1008.18C1103.48 1026.11 1086.52 1040.16 1066.83 1049.69C1050.55 1057.59 1036.09 1061.59 1017.5 1063.36C1014.57 1063.64 955.71 1063.78 797.17 1063.9C595.43 1064.05 580.71 1064.02 578.78 1063.5C576.25 1062.81 574.32 1061.25 573.07 1058.88C572.17 1057.17 572.17 1057.17 572.17 1027.67C572.17 998.3 572.17 998.16 572.87 996.64C573.67 994.92 575.47 992.97 577.09 992.09C578.11 991.53 584.66 991.49 707.33 991.32C836.5 991.14 836.5 991.14 840.22 990.41C851.95 988.13 861.45 983.19 869.78 975.05C879.29 965.75 884.79 954.42 886.49 940.65C886.95 936.92 887 907.42 887 663.65C886.99 480.76 886.88 388.69 886.65 384.33C885.72 366.81 884.93 357.51 883.66 349.5C883.46 348.22 883.07 345.74 882.8 344C881.98 338.79 880.58 331.22 879.6 326.67C879.23 324.93 878.8 322.87 878.64 322.11C878.27 320.28 876.07 311.29 875.47 309.17C871.61 295.52 866.55 280.71 862.16 270.17C846.31 232.17 824.66 198.89 796.69 169.5C767.07 138.39 731.17 113.47 692.5 97.18C676.14 90.28 664.04 86.26 646.5 81.87C622.22 75.8 598.85 73 572.7 73C538.55 73.01 506.3 78.26 473.5 89.14C443.09 99.23 412.41 115.26 386.33 134.7C349.64 162.04 320.67 195.16 298.02 235.67C293.55 243.66 286.55 258.17 282.84 267.17C275.76 284.29 269.28 305.38 265.88 322.36C263.13 336.06 261.94 344.03 260.31 359.67C259.2 370.31 259.2 371.09 259.09 786.83C259 1159.21 259.04 1198.9 259.51 1202.67C261.66 1219.83 270.36 1234.03 284.51 1243.51C291.33 1248.08 297.89 1250.66 307.17 1252.41C308.64 1252.69 398.43 1252.84 650 1252.99C990.83 1253.19 990.83 1253.19 996.17 1253.9C1009.27 1255.65 1017.37 1257.43 1028.65 1261.06C1049.42 1267.73 1069.09 1278.72 1085.85 1293.01C1090.64 1297.09 1100.38 1306.84 1104.49 1311.67C1122.94 1333.34 1135.65 1359.47 1141.11 1387C1146.91 1416.23 1145.14 1445.04 1135.84 1472.83C1129.42 1492.03 1118.75 1510.64 1104.94 1526.72C1085.06 1549.89 1058.82 1567.58 1029.61 1577.51C1013.76 1582.9 1000.07 1585.67 984.5 1586.64C981.03 1586.86 809.22 1587.04 493.17 1587.17C7.17 1587.37 7.17 1587.37 5.42 1586.49Z"/></symbol>
 </svg>
 
-<div class="grain" aria-hidden="true"></div>
 <div class="cursor" aria-hidden="true"><span class="cursor-ring"></span><span class="cursor-dot"></span></div>
 
 <header class="topbar">
@@ -373,12 +369,11 @@ em{font-style:italic}
 <canvas id="webgl" aria-hidden="true"></canvas>
 <div class="vignette" id="vignette" aria-hidden="true"></div>
 <div class="mark2d" id="mark2d" aria-hidden="true"><svg viewBox="-40 -40 1225 1668"><use href="#mark"/></svg></div>
-<div class="portal2d" id="portal2d" aria-hidden="true"></div>
 
 <section class="gate" id="gate" aria-label="Pintu masuk">
   <div class="gate-ui" id="gateUi">
     <p class="eyebrow" data-i18n="eyebrow">online · safirahalim.com</p>
-    <h1 class="gate-title" data-i18n="gateTitle" data-split>kepo ya sama penginapan yang katanya <em>recommended?</em></h1>
+    <h1 class="gate-title" data-i18n="gateTitle" data-split>kepo ya sama penginapan yang katanya <em>recommended</em> ini?</h1>
     <div class="gate-actions">
       <button type="button" class="btn-enter magnetic" id="enter"><span data-i18n="enter">klik aja kalo kepo 👀</span></button>
       <button type="button" class="btn-nope" id="nope">nggak kepo</button>
@@ -387,7 +382,6 @@ em{font-style:italic}
   </div>
   <button type="button" class="skip" id="skip" data-i18n="skip">lewati intro →</button>
 </section>
-<div class="flash" id="flash" aria-hidden="true"></div>
 <a class="fab" id="fab" href="#booking"><span data-i18n="fab">🔑 booking</span></a>
 <nav class="chapters" id="chapters" aria-label="Bagian halaman"></nav>
 <div class="lang-wipe" id="langWipe" aria-hidden="true"><span id="langWipeTxt"></span></div>
@@ -686,7 +680,7 @@ const COPY = {
   gaul: {
     loading: 'lagi beres-beres kamar…',
     eyebrow: 'online · safirahalim.com',
-    gateTitle: 'kepo ya sama penginapan yang katanya <em>recommended?</em>',
+    gateTitle: 'kepo ya sama penginapan yang katanya <em>recommended</em> ini?',
     enter: 'klik aja kalo kepo 👀',
     hint: 'psst… gerakin mouse-nya, logonya ngikutin',
     hintTouch: 'psst… logonya bisa digeser 👆',
@@ -805,6 +799,9 @@ const COPY = {
 const NOPE = ['nggak kepo', 'yakin? 🤨', 'masa sih…', 'klik yang satunya aja', 'ya udah deh, kepo 😅'];
 
 /* ------------------------------------------------------------ split text */
+// the squiggle uses non-scaling-stroke, so its dashes are measured in screen pixels, not viewBox units
+const sqLen = p => Math.ceil(p.getTotalLength() * (p.ownerSVGElement.getBoundingClientRect().width / 300)) + 8;
+const hideSquiggle = p => { const len = sqLen(p); p.style.strokeDasharray = `${len} ${len}`; p.style.strokeDashoffset = len; };
 const SQUIGGLE = '<svg class="squiggle" viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden="true"><path d="M3 13C40 4 76 18 114 10S190 3 228 11 286 9 297 8"/></svg>';
 function split(el) {
   const walk = node => [...node.childNodes].forEach(n => {
@@ -821,16 +818,19 @@ function split(el) {
       n.replaceWith(frag);
     } else if (n.nodeType === 1 && n.tagName !== 'BR') walk(n);
   });
+  el.classList.remove('revealed');
   el.setAttribute('aria-label', el.textContent.replace(/\s+/g, ' ').trim());
   walk(el);
   $$('.w', el).forEach(w => w.setAttribute('aria-hidden', 'true'));
   $$('em', el).forEach(em => em.insertAdjacentHTML('beforeend', SQUIGGLE));
-  $$('.squiggle path', el).forEach(p => { const len = p.getTotalLength(); p.style.strokeDasharray = len; p.style.strokeDashoffset = len; });
+  $$('.squiggle path', el).forEach(hideSquiggle);
 }
 function revealChars(el, delay = 0) {
-  const tl = gsap.timeline({ delay });
+  el.classList.remove('revealed');
+  const tl = gsap.timeline({ delay, onComplete: () => el.classList.add('revealed') }); // drop the word masks so italic overhangs show
   tl.fromTo($$('.c', el), { yPercent: 118, rotate: 7, opacity: 0 }, { yPercent: 0, rotate: 0, opacity: 1, duration: 1.05, ease: 'power4.out', stagger: 0.014 });
   const sq = $$('.squiggle path', el);
+  sq.forEach(hideSquiggle); // re-measure: the title may have re-wrapped since it was split
   if (sq.length) tl.to(sq, { strokeDashoffset: 0, duration: 0.9, ease: 'power2.inOut' }, '-=0.45');
   return tl;
 }
@@ -924,7 +924,7 @@ const MARK = { w: 1145, h: 1588, cx: 572.5, cy: 794 };
 // inner door of the mark, in path units: stems x 259..887, arch top y 73, arch meets the stems at y 374, threshold y 991
 const DOOR = { l: 259, r: 887, top: 73, spring: 374, bottom: 991 };
 const DOOR_Y = MARK.cy - (DOOR.top + DOOR.bottom) / 2;
-const DEPTH = 130, CAM_END_Z = -200, FOV_END = 50, PORTAL_D = 100;
+const DEPTH = 130, CAM_END_Z = -200, FOV_END = 50;
 
 async function initWebGL() {
   const probe = document.createElement('canvas');
@@ -934,8 +934,7 @@ async function initWebGL() {
   const { RoomEnvironment } = await import('three/addons/environments/RoomEnvironment.js');
   const canvas = $('#webgl');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, stencil: true, powerPreference: 'high-performance' });
-  let dpr = Math.min(devicePixelRatio || 1, finePointer ? 2 : 1.6);
-  renderer.setPixelRatio(dpr);
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); // always crisp on retina screens
   renderer.setSize(innerWidth, innerHeight, false);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 0.95;
@@ -979,7 +978,7 @@ async function initWebGL() {
   logo.renderOrder = 0;
   pivot.add(logo);
 
-  // door opening: writes stencil so the lobby photo only shows through it
+  // door opening: writes stencil so the backlight stays off the view through the door (it reads as open/transparent)
   const toX = x => x - MARK.cx, toY = y => MARK.cy - y, pad = 6;
   const L = DOOR.l - pad, R = DOOR.r + pad;
   const door = new THREE.Shape();
@@ -996,53 +995,16 @@ async function initWebGL() {
   mask.renderOrder = 1;
   group.add(mask);
 
-  // light behind the door: a screen-aligned glow seen only through the opening (stencil);
-  // it grows during the flight until it fills the frame, then the page fades into the lobby
-  const lightTex = (() => {
-    const c = document.createElement('canvas'); c.width = c.height = 512;
-    const g = c.getContext('2d'), grd = g.createRadialGradient(256, 256, 0, 256, 256, 256);
-    grd.addColorStop(0, 'rgba(255,246,232,1)'); grd.addColorStop(0.3, 'rgba(250,214,170,.95)');
-    grd.addColorStop(0.62, 'rgba(214,112,72,.5)'); grd.addColorStop(1, 'rgba(120,12,22,0)');
-    g.fillStyle = grd; g.fillRect(0, 0, 512, 512);
-    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
-  })();
-  const photoMat = new THREE.MeshBasicMaterial({
-    map: lightTex, toneMapped: false, transparent: true, opacity: 0, blending: THREE.AdditiveBlending,
-    depthTest: false, depthWrite: false, stencilWrite: true, stencilRef: 1,
-    stencilFunc: THREE.EqualStencilFunc, stencilFail: THREE.KeepStencilOp, stencilZFail: THREE.KeepStencilOp, stencilZPass: THREE.KeepStencilOp,
-  });
-  const photo = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), photoMat);
-  photo.renderOrder = 2;
-  photo.frustumCulled = false;
-  photo.position.z = -PORTAL_D;
-  camera.add(photo);
-  scene.add(camera);
-
-  // warm light spilling from the door + halo behind the arch
-  const doorLight = new THREE.PointLight('#ffb27a', 3.5, 2600, 1.2); doorLight.position.set(0, DOOR_Y, 160); group.add(doorLight);
   // backlight around the arch only: the stencil keeps it off the view through the door
   const halo = new THREE.Sprite(new THREE.SpriteMaterial({
-    map: glowTex, color: '#ff9a62', transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false,
+    map: glowTex, color: '#a3262f', transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false,
     stencilWrite: true, stencilRef: 1, stencilFunc: THREE.NotEqualStencilFunc, stencilZPass: THREE.KeepStencilOp,
   }));
   halo.position.set(0, DOOR_Y + 60, -520); halo.scale.setScalar(2700); group.add(halo);
 
-  // dust motes
-  const N = finePointer ? 340 : 170;
-  const pos = new Float32Array(N * 3), seed = new Float32Array(N);
-  for (let i = 0; i < N; i++) {
-    pos[i * 3] = (Math.random() - 0.5) * 5600;
-    pos[i * 3 + 1] = -1900 + Math.random() * 4400;
-    pos[i * 3 + 2] = -2600 + Math.random() * 6600;
-    seed[i] = Math.random();
-  }
-  const dustGeo = new THREE.BufferGeometry(); dustGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  const dustMat = new THREE.PointsMaterial({ map: glowTex, color: '#f0c79c', size: 16, sizeAttenuation: true, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
-  const dust = new THREE.Points(dustGeo, dustMat); scene.add(dust);
-
   /* --- state + framing */
   const st = {
-    grow: 0.02, spin: 0, rise: 0, halo: 0, dust: 0, focus: 0, fly: 0, zoom: 0.45, light: 0,
+    grow: 0.02, spin: 0, rise: 0, halo: 0, focus: 0,
     baseX: 0, baseY: 0, baseRotX: 0.05, baseRotY: -0.38, dist: 4000, fov0: 35,
     cam: { y: 0, z: 4000, fov: 35 }, crossed: false,
   };
@@ -1084,12 +1046,8 @@ async function initWebGL() {
 
   /* --- render loop */
   const clock = new THREE.Clock();
-  let frames = 0, slowFrames = 0;
   function tick() {
-    const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
-    // drop resolution once if the device struggles
-    if (++frames < 120 && dt > 0.028) slowFrames++;
-    if (frames === 120 && slowFrames > 50 && dpr > 1) { dpr = 1; renderer.setPixelRatio(1); renderer.setSize(innerWidth, innerHeight, false); }
+    const t = clock.getElapsedTime();
 
     ptr.x += (ptr.tx - ptr.x) * 0.055; ptr.y += (ptr.ty - ptr.y) * 0.055;
     if (!drag.on) { drag.rot += drag.vel; drag.vel *= 0.93; drag.rot *= 0.97; }
@@ -1099,50 +1057,27 @@ async function initWebGL() {
     group.position.x = st.baseX * (1 - f);
     group.position.y = (st.baseY + st.rise + Math.sin(t * 0.9) * 16 * idle) * (1 - f);
     pivot.scale.z = st.grow;
-    halo.material.opacity = 0.42 * st.halo * (0.93 + 0.07 * Math.sin(t * 1.7));
-    doorLight.intensity = 3.5 * (0.6 + 0.4 * Math.min(st.halo, 1.6));
+    halo.material.opacity = 0.5 * st.halo * (0.93 + 0.07 * Math.sin(t * 1.7));
 
     camera.position.set(0, st.cam.y, st.cam.z);
     if (camera.fov !== st.cam.fov) { camera.fov = st.cam.fov; camera.updateProjectionMatrix(); }
-    // door light: sized from the frustum, centred on the door while at the gate, drifting a little with the pointer
-    const hv = 2 * PORTAL_D * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)), wv = hv * camera.aspect;
-    const size = Math.max(wv, hv) * st.zoom;
-    photo.scale.set(size, size, 1);
-    const k = PORTAL_D / Math.max(st.cam.z, 1) * (1 - f);
-    photo.position.x = group.position.x * k - ptr.x * wv * 0.02 * (1 - f);
-    photo.position.y = (group.position.y + DOOR_Y - st.cam.y) * k + ptr.y * hv * 0.02 * (1 - f);
-    photoMat.opacity = st.light * (0.94 + 0.06 * Math.sin(t * 1.3));
     if (phase === 'flight') {
       const p = gsap.utils.clamp(0, 1, (st.dist - st.cam.z) / (st.dist - CAM_END_Z));
       camera.rotation.z = -0.045 * Math.sin(Math.PI * p);
       if (!st.crossed && st.cam.z < 60) cross();
     } else camera.rotation.z = 0;
 
-    dustMat.opacity = 0.55 * st.dust;
-    const a = dustGeo.attributes.position.array, camZ = st.cam.z;
-    for (let i = 0; i < N; i++) {
-      const k = i * 3, s = seed[i];
-      a[k] += Math.sin(t * 0.3 + s * 40) * dt * 9;
-      a[k + 1] += (10 + s * 26) * dt;
-      a[k + 2] += st.fly * dt * (1800 + s * 1400);
-      if (a[k + 1] > 2500) a[k + 1] = -1900;
-      if (a[k + 2] > camZ - 260) a[k + 2] -= 6600; // never let a mote get close enough to become a full-screen sprite
-    }
-    dustGeo.attributes.position.needsUpdate = true;
     renderer.render(scene, camera);
   }
 
+  // through the door: the lobby starts fading in while the camera is still gliding forward
   function cross() {
     st.crossed = true;
-    photoMat.stencilWrite = false;      // the door now covers the whole frame: draw the lobby everywhere
-    mask.visible = false;
-    gsap.to(st, { halo: 0, duration: 0.7, ease: 'power2.out', overwrite: 'auto' }); // settle into the plain photo before the HTML takes over
-    if (!reduced) gsap.fromTo('#flash', { opacity: 0 }, { opacity: 0.22, duration: 0.14, yoyo: true, repeat: 1, ease: 'power1.out' });
+    handoff();
   }
 
   function reset() {
-    Object.assign(st, { grow: 0.02, spin: -1.3, rise: -240, halo: 0, dust: 0, focus: 0, fly: 0, zoom: 0.45, light: 0, crossed: false });
-    photoMat.stencilWrite = true; mask.visible = true;
+    Object.assign(st, { grow: 0.02, spin: -1.3, rise: -240, halo: 0, focus: 0, crossed: false });
     drag.rot = drag.vel = 0;
     frame();
   }
@@ -1154,9 +1089,7 @@ async function initWebGL() {
     tl.to(st, { grow: 1, duration: 1.7, ease: 'expo.out' }, 0.05)
       .to(st, { spin: 0, duration: 2.2, ease: 'expo.out' }, 0)
       .to(st, { rise: 0, duration: 2.0, ease: 'expo.out' }, 0)
-      .to(st, { halo: 1, duration: 2.2, ease: 'power2.out' }, 0.25)
-      .to(st, { dust: 1, duration: 2.4, ease: 'power1.out' }, 0.3)
-      .to(st, { light: 0.7, duration: 2.2, ease: 'power2.out' }, 0.5);
+      .to(st, { halo: 1, duration: 2.2, ease: 'power2.out' }, 0.25);
     return tl;
   }
 
@@ -1167,10 +1100,7 @@ async function initWebGL() {
       .to(st.cam, { z: CAM_END_Z, duration: 2.15, ease: 'power4.inOut' }, 0.35)
       .to(st.cam, { fov: 66, duration: 1.55, ease: 'power2.in' }, 0.35)
       .to(st.cam, { fov: FOV_END, duration: 0.6, ease: 'power2.out' }, 1.9)
-      .to(st, { fly: 1, duration: 1.3, ease: 'power2.in' }, 0.45)
-      .to(st, { zoom: 3.2, duration: 2.15, ease: 'power3.in' }, 0.35)
-      .to(st, { light: 1, duration: 1.4, ease: 'power2.in' }, 0.45)
-      .to(st, { halo: 1.7, duration: 1.4, ease: 'power2.in' }, 0.55);
+      .to(st, { halo: 0, duration: 1.2, ease: 'power2.in' }, 0.6);
   }
 
   const stop = () => renderer.setAnimationLoop(null);
@@ -1247,20 +1177,19 @@ function enter() {
   hideGateUi(tl);
   if (webgl) tl.add(webgl.fly(), 0.05);
   else if (!reduced) {
-    // 2D: the arch opens into the lobby
-    gsap.set('#portal2d', { visibility: 'visible' });
-    tl.to('#mark2d', { scale: 5, opacity: 0, duration: 1.3, ease: 'expo.in' }, 0.25)
-      .fromTo('#portal2d', { clipPath: 'inset(42% 40% 30% 40% round 300px 300px 0px 0px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px 0px 0px 0px)', duration: 1.4, ease: 'expo.inOut' }, 0.3);
+    // 2D: the mark rushes past the camera, the lobby fades in behind it
+    tl.to('#mark2d', { scale: 5, opacity: 0, duration: 1.3, ease: 'expo.in' }, 0.25);
   } else tl.to('#gateBg', { opacity: 0, duration: 0.5 }, 0.2);
 }
 function handoff() {
+  if (phase === 'lobby') return;
   phase = 'lobby';
   gsap.set('#lobbyImg', { scale: 1 });
   $('#gate').classList.add('done');
   gsap.set('#gateBg', { autoAlpha: 0 });
-  gsap.to(['#webgl', '#vignette', '#portal2d', '#mark2d'], {
+  gsap.to(['#webgl', '#vignette', '#mark2d'], {
     autoAlpha: 0, duration: 1.1, ease: 'power2.out',
-    onComplete: () => { webgl?.stop(); gsap.set('#portal2d', { visibility: 'hidden' }); },
+    onComplete: () => webgl?.stop(),
   });
   root.classList.remove('locked');
   lenis.start();
@@ -1534,7 +1463,7 @@ $('#replay').addEventListener('click', () => {
   gsap.set(['#gateUi .eyebrow', '.gate-title .w', '.gate-title .squiggle', '#gateUi .gate-actions', '#gateUi .gate-hint', '#skip'], { clearProps: 'all' });
   gsap.set(['#gateUi .eyebrow', '#gateUi .gate-actions', '#gateUi .gate-hint', '#skip'], { opacity: 0 });
   gsap.set('.gate-title .c', { opacity: 0 });
-  $$('.gate-title .squiggle path').forEach(p => { p.style.strokeDashoffset = p.getTotalLength(); });
+  $$('.gate-title .squiggle path').forEach(hideSquiggle);
   gsap.set('#mark2d', { clearProps: 'all' });
   gsap.set('#langWipe', { autoAlpha: 0 });
   gsap.set(['#sticker', '#scrollCue'], { opacity: 0 });
