@@ -43,7 +43,7 @@ em{font-style:italic}
 .c{display:inline-block;will-change:transform}
 
 /* grain + vignette + cursor */
-.grain{position:fixed;inset:-50%;z-index:65;pointer-events:none;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain 1s steps(4) infinite}
+.grain{position:fixed;inset:-50%;z-index:65;pointer-events:none;background:url(assets/grain.png) 0 0/128px 128px;animation:grain 1s steps(4) infinite}
 @keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-1%)}100%{transform:translate(1%,3%)}}
 .vignette{position:fixed;inset:0;z-index:21;pointer-events:none;background:radial-gradient(ellipse at 60% 45%,transparent 45%,rgba(14,2,3,.65))}
 .cursor{display:none}
@@ -83,7 +83,7 @@ em{font-style:italic}
 .eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:#7fdc8f;box-shadow:0 0 0 0 rgba(127,220,143,.6);animation:live 1.8s infinite}
 @keyframes live{70%{box-shadow:0 0 0 9px rgba(127,220,143,0)}100%{box-shadow:0 0 0 0 rgba(127,220,143,0)}}
 .gate-title{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(2.5rem,5.4vw,5.2rem);line-height:1.02;letter-spacing:-.02em;margin-bottom:34px}
-.gate-title em,.lobby-title em,.next-title em{position:relative;color:var(--sand);font-weight:300}
+.gate-title em,.lobby-title em{position:relative;color:var(--sand);font-weight:300}
 .gate-title em,.lobby-title em{display:inline-block}
 .squiggle{position:absolute;left:0;right:0;bottom:-.12em;width:100%;height:.32em;overflow:visible;pointer-events:none}
 .squiggle path{fill:none;stroke:var(--sand);stroke-width:3;stroke-linecap:round;vector-effect:non-scaling-stroke}
@@ -103,8 +103,7 @@ em{font-style:italic}
 .mark2d svg{width:100%;height:auto;fill:var(--cream);filter:drop-shadow(0 30px 50px rgba(0,0,0,.5))}
 .no-webgl .mark2d{display:block}
 .no-webgl #webgl{display:none}
-.portal2d{position:fixed;inset:0;z-index:25;pointer-events:none;visibility:hidden;clip-path:inset(50% 50% 50% 50% round 999px 999px 0 0)}
-.portal2d img{width:100%;height:100%;object-fit:cover}
+.portal2d{position:fixed;inset:0;z-index:25;pointer-events:none;visibility:hidden;clip-path:inset(50% 50% 50% 50% round 999px 999px 0 0);background:radial-gradient(circle at 50% 50%,#fff6e8 0%,#fad6aa 35%,#d67048 70%,#7a0c18 100%)}
 
 /* lobby */
 .lobby-pin{position:relative;height:var(--vh,100vh);overflow:hidden;background:var(--espresso)}
@@ -128,17 +127,166 @@ em{font-style:italic}
 .bubble p{font-family:'Fraunces',serif;font-size:clamp(1.15rem,1.8vw,1.55rem);line-height:1.2}
 .bubble .small{margin-top:10px;font-family:'Jost',sans-serif;font-size:.95rem;line-height:1.45;color:#6d4a3b}
 
-/* next */
-.next{position:relative;padding:22vh var(--gutter) 16vh;background:linear-gradient(180deg,var(--espresso),var(--night) 70%);overflow:hidden}
-.next-kicker{font-size:.8rem;letter-spacing:.26em;text-transform:uppercase;color:var(--sand);margin-bottom:22px}
-.next-title{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(2.4rem,6vw,5.6rem);line-height:1;letter-spacing:-.02em;max-width:14ch}
-.next-body{margin-top:26px;max-width:46ch;font-size:1.05rem;font-weight:300;color:#d8c9be;line-height:1.6}
-.next-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:40px}
+/* scenes 3–9: shared */
+.kicker{display:flex;align-items:center;gap:12px;font-size:.78rem;letter-spacing:.26em;text-transform:uppercase;color:var(--sand);margin-bottom:18px}
+.kicker::before{content:"";width:26px;height:1px;background:var(--sand)}
+.scene-title{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(2.2rem,4.6vw,4.4rem);line-height:1.02;letter-spacing:-.02em}
+.scene-title em,.end-title em{color:var(--sand);font-weight:300}
+.scene-body{margin-top:20px;max-width:44ch;font-size:1.05rem;font-weight:300;color:#d8c9be;line-height:1.6}
+.note{display:block;margin-top:16px;font-size:.78rem;color:rgba(197,163,130,.72);letter-spacing:.02em}
 .btn-ghost{display:inline-flex;align-items:center;padding:18px 28px;border-radius:999px;border:1px solid rgba(235,227,221,.35);font-weight:500;transition:background .3s,color .3s}
 .btn-ghost:hover{background:var(--cream);color:var(--maroon)}
-.next .btn-enter::after{display:none}
-.proto-tag{margin-top:12vh;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(235,227,221,.35)}
-.next-mark{position:absolute;right:-6vw;bottom:-8vw;width:44vw;max-width:620px;fill:rgba(235,227,221,.04);pointer-events:none}
+.btn-ghost.small{margin-top:28px;padding:12px 20px;font-size:.9rem}
+.link-line{font-size:.85rem;letter-spacing:.06em;color:var(--cream);border-bottom:1px solid var(--sand);padding-bottom:3px}
+
+/* 3 · lokasi */
+.loc{background:var(--night)}
+.loc-pin{height:var(--vh,100vh);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);align-items:center;gap:4vw;padding:0 var(--gutter);overflow:hidden}
+.map{width:100%;max-width:640px;height:auto;max-height:86vh;justify-self:center;overflow:visible}
+.map-ring{fill:none;stroke:rgba(197,163,130,.38);stroke-width:1.2;stroke-dasharray:3 7}
+.ring-lab{fill:rgba(197,163,130,.8);font:500 12px 'Jost',sans-serif;letter-spacing:.16em;text-anchor:middle;text-transform:uppercase}
+.route{fill:none;stroke:var(--cream);stroke-width:2.5;stroke-linecap:round}
+.dot{fill:var(--sand)}
+.dest:not(.dest-later) .dot{fill:var(--cream)}
+.pulse{fill:none;stroke:var(--cream);stroke-width:2;transform-box:fill-box;transform-origin:center;animation:mapPulse 2s var(--ease-out) infinite}
+@keyframes mapPulse{0%{transform:scale(1);opacity:.85}100%{transform:scale(3.4);opacity:0}}
+.dest-name{fill:var(--cream);font:500 17px 'Jost',sans-serif}
+.dest-min{fill:var(--sand);font:italic 400 16px 'Fraunces',serif}
+.ta-end{text-anchor:end}
+.ta-mid{text-anchor:middle}
+.home-ring{fill:none;stroke:var(--sand);stroke-width:1.5}
+.home-bg{fill:var(--cream)}
+.map-home svg{fill:var(--maroon)}
+.home-lab{fill:var(--cream);font:600 14px 'Jost',sans-serif;text-anchor:middle;letter-spacing:.03em}
+.plane{fill:var(--cream)}
+
+/* 4 · kamar */
+.rooms{background:linear-gradient(180deg,var(--night),var(--espresso))}
+.rooms-pin{height:var(--vh,100vh);overflow:hidden;display:flex;align-items:center}
+.room-track{display:flex;align-items:center;gap:clamp(20px,3vw,44px);padding:0 var(--gutter);perspective:1600px;will-change:transform}
+.rooms-intro{flex:0 0 min(440px,80vw)}
+.room-card{position:relative;flex:0 0 clamp(290px,27vw,380px);height:min(66vh,560px);perspective:1400px;cursor:pointer}
+.rc-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .9s var(--ease-out)}
+.room-card.flipped .rc-inner{transform:rotateY(180deg)}
+.room-card.flipped .rc-front,.room-card:not(.flipped) .rc-back{pointer-events:none}
+.rc-face{position:absolute;inset:0;border-radius:24px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 30px 60px rgba(0,0,0,.45)}
+.rc-front img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease-out)}
+.room-card:hover .rc-front img{transform:scale(1.06)}
+.rc-front::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(28,4,6,.94) 0%,rgba(28,4,6,.4) 46%,rgba(28,4,6,0) 72%)}
+.rc-tag{position:absolute;top:18px;left:18px;z-index:2;padding:7px 14px;border-radius:999px;background:var(--cream);color:var(--maroon);font-size:.78rem;font-weight:600;transform:rotate(-3deg)}
+.rc-meta{position:absolute;left:24px;right:24px;bottom:22px;z-index:2}
+.rc-meta h3,.rc-back h3{font-family:'Fraunces',serif;font-weight:400;font-size:1.9rem;line-height:1.05}
+.rc-meta p{margin-top:8px;font-size:.95rem;font-weight:300;color:#e3d3c8;line-height:1.45}
+.rc-row{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+.rc-price{font-family:'Fraunces',serif;font-size:1.35rem}
+.rc-price small,.rc-big small{font-family:'Jost',sans-serif;font-size:.8rem;font-weight:300;opacity:.8}
+.rc-more{padding:8px 14px;border-radius:999px;border:1px solid rgba(235,227,221,.4);font-size:.82rem;transition:background .3s,color .3s}
+.rc-more:hover{background:var(--cream);color:var(--maroon)}
+.rc-back{transform:rotateY(180deg) translateZ(1px);background:var(--cream);color:var(--espresso);padding:30px 26px;display:flex;flex-direction:column}
+.rc-back .rc-tag{position:static;align-self:flex-start;background:var(--maroon);color:var(--cream);margin-bottom:22px}
+.rc-big{font-family:'Fraunces',serif;font-size:2.6rem;color:var(--maroon);margin:10px 0 18px}
+.rc-feat{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:auto}
+.rc-feat li{padding:6px 12px;border-radius:999px;border:1px solid rgba(53,18,12,.2);font-size:.85rem}
+.rc-pick{margin-top:22px;justify-content:center;background:var(--maroon);color:var(--cream)}
+.rc-pick::after{display:none}
+.rc-pick:hover{background:var(--maroon-2)}
+.rc-back-btn{margin-top:12px;font-size:.85rem;color:#6d4a3b;align-self:center}
+
+/* 5 · balkon */
+.balcony{background:var(--espresso)}
+.bal-pin{position:relative;height:var(--vh,100vh);display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:6vw;padding:0 var(--gutter);overflow:hidden}
+.bal-window{position:relative;width:min(34vw,440px);height:min(76vh,680px);border-radius:999px 999px 22px 22px;overflow:hidden;background:#120203;box-shadow:0 0 0 10px rgba(235,227,221,.05),0 40px 80px rgba(0,0,0,.5);justify-self:center}
+.bal-window img{width:100%;height:100%;object-fit:cover;transform-origin:50% 60%}
+.bal-glow{position:absolute;inset:0;opacity:0;mix-blend-mode:screen;background:radial-gradient(ellipse at 50% 32%,rgba(255,236,205,.6),rgba(255,236,205,0) 65%)}
+.curtain{position:absolute;top:0;bottom:0;width:51%;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,0) 30%,rgba(0,0,0,.35)),repeating-linear-gradient(90deg,#4f050d 0 10px,#7d0a15 10px 22px,#5c0710 22px 30px,#3f040a 30px 38px);box-shadow:inset 0 -30px 60px rgba(0,0,0,.35)}
+.curtain.left{left:0;transform-origin:0 50%}
+.curtain.right{right:0;transform-origin:100% 50%}
+.bal-cue{position:absolute;left:50%;bottom:calc(26px + env(safe-area-inset-bottom));translate:-50% 0;font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(235,227,221,.6)}
+
+/* 6 · fasilitas */
+.facil{padding:16vh var(--gutter) 10vh;background:var(--espresso)}
+.fac-head{max-width:640px}
+.sticker-area{position:relative;height:min(62vh,560px);margin-top:4vh}
+.stk{position:absolute;left:var(--x);top:var(--y);transform:rotate(var(--r));display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;border:5px solid #fff7ef;font-family:'Fraunces',serif;font-size:clamp(1.05rem,1.7vw,1.5rem);white-space:nowrap;box-shadow:0 18px 30px rgba(0,0,0,.35);user-select:none;-webkit-user-select:none}
+.has-cursor .stk{touch-action:none}
+.s-sand{background:var(--sand);color:var(--espresso)}
+.s-cream{background:#fff7ef;color:var(--maroon)}
+.s-maroon{background:var(--maroon);color:var(--cream)}
+
+/* 7 · ulasan */
+.reviews{padding:16vh var(--gutter);background:linear-gradient(180deg,var(--espresso),var(--night))}
+.rv-head{max-width:640px;margin-bottom:7vh}
+.rv-thread{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+.rv{position:relative;display:flex;flex-direction:column;align-items:flex-start;min-height:56px}
+.rv.right{align-items:flex-end}
+.rv-typing{position:absolute;top:0;left:0;display:inline-flex;gap:5px;padding:16px 18px;border-radius:20px;background:rgba(235,227,221,.1);opacity:0}
+.rv.right .rv-typing{left:auto;right:0}
+.rv-typing i{width:7px;height:7px;border-radius:50%;background:var(--sand);animation:typing 1s infinite}
+.rv-typing i:nth-child(2){animation-delay:.15s}
+.rv-typing i:nth-child(3){animation-delay:.3s}
+@keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-5px);opacity:1}}
+.rv-bubble{max-width:min(580px,92%);padding:22px 24px;border-radius:26px 26px 26px 8px;background:var(--cream);color:var(--espresso);box-shadow:0 20px 40px rgba(0,0,0,.3);opacity:0}
+.rv.right .rv-bubble{border-radius:26px 26px 8px 26px;background:#fff7ef}
+.rv-who{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px}
+.rv-ava{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--maroon);color:var(--cream);font-family:'Fraunces',serif}
+.rv-who b{font-weight:600;font-size:.95rem}
+.rv-stars{color:#c98a2b;letter-spacing:2px;font-size:.85rem}
+.rv-bubble p{font-size:1rem;line-height:1.6;color:#4a2a1f}
+.rv-foot{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:14px;margin-top:8vh}
+.rv-score{font-family:'Fraunces',serif;font-size:2.2rem}
+.rv-stars.big{font-size:1.2rem;color:var(--sand)}
+
+/* 8 · booking */
+.book{padding:16vh var(--gutter) 14vh;background:var(--night)}
+.book-head{max-width:700px;margin-bottom:6vh}
+.book-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:6vw;align-items:center}
+.chat{display:flex;flex-direction:column;gap:12px;max-width:580px}
+.msg{max-width:92%;padding:14px 18px;border-radius:20px;font-size:1rem;line-height:1.4}
+.msg.bot{align-self:flex-start;background:rgba(235,227,221,.09);border:1px solid rgba(235,227,221,.14);border-bottom-left-radius:6px;font-family:'Fraunces',serif;font-size:1.15rem}
+.msg.me{align-self:flex-end;display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--cream);color:var(--espresso);border-bottom-right-radius:6px}
+.field{display:flex;flex-direction:column;gap:2px;min-width:140px;padding:6px 12px;border-radius:12px;background:#fff;cursor:pointer}
+.field span{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:#845c48}
+.field input{border:0;background:transparent;font:500 1rem 'Jost',sans-serif;color:var(--espresso);outline:none;min-height:26px;-webkit-appearance:none;appearance:none;text-align:left}
+.stepper{display:flex;align-items:center;gap:12px}
+.stepper button{width:34px;height:34px;border-radius:50%;border:1px solid rgba(53,18,12,.25);font-size:1.1rem;line-height:1;color:var(--maroon);transition:background .25s,color .25s}
+.stepper button:hover:not(:disabled){background:var(--maroon);color:var(--cream)}
+.stepper button:disabled{opacity:.3;cursor:not-allowed}
+.stepper output{font-family:'Fraunces',serif;font-size:1.4rem;min-width:1.4em;text-align:center}
+.chips button{padding:9px 16px;border-radius:999px;border:1px solid rgba(53,18,12,.25);font-size:.92rem;transition:background .25s,color .25s,border-color .25s}
+.chips button[aria-pressed="true"]{background:var(--maroon);border-color:var(--maroon);color:var(--cream)}
+.msg.sum{font-family:'Jost',sans-serif;font-size:1rem;line-height:1.5}
+.msg.sum strong{font-family:'Fraunces',serif;font-size:1.45rem;font-weight:500;color:var(--sand)}
+.msg.sum small{display:block;margin-top:6px;font-size:.78rem;opacity:.7}
+.key-zone{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;padding:10px}
+.key{position:relative;display:block;width:150px;height:248px;transform-origin:50% 14px;animation:swing 3.2s ease-in-out infinite}
+.key-zone:hover .key{animation-duration:1.1s}
+@keyframes swing{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+.key-ring{position:absolute;left:50%;top:0;width:46px;height:46px;margin-left:-23px;border-radius:50%;border:5px solid #d9b98f;box-shadow:inset 0 0 0 2px rgba(0,0,0,.15)}
+.key-tag{position:absolute;left:50%;top:34px;width:124px;height:206px;margin-left:-62px;border-radius:999px 999px 18px 18px;background:linear-gradient(160deg,#8f0e1d,#5a0610);box-shadow:0 26px 50px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,255,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--cream)}
+.key-tag::before{content:"";position:absolute;top:14px;width:16px;height:16px;border-radius:50%;background:var(--night);box-shadow:inset 0 2px 3px rgba(0,0,0,.6)}
+.key-tag svg{width:38px;height:auto;margin-top:18px;fill:var(--cream)}
+.key-tag b{font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:1.3rem}
+.key-tag small{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sand)}
+.key-cta{display:inline-flex;padding:16px 26px;border-radius:999px;background:var(--cream);color:var(--maroon);font-weight:600;font-size:1.02rem;box-shadow:0 18px 40px rgba(0,0,0,.35);transition:transform .3s var(--ease-out)}
+.key-zone:hover .key-cta{transform:translateY(-3px)}
+.key-zone .note{margin-top:0;max-width:30ch}
+
+/* 9 · penutup */
+.end{position:relative;overflow:hidden;padding:20vh var(--gutter) 6vh;background:linear-gradient(180deg,var(--night),#2a0609)}
+.end-title{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(2.4rem,6vw,5.8rem);line-height:1;letter-spacing:-.02em;max-width:16ch}
+.end-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:40px}
+.end-actions .btn-enter::after{display:none}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-top:16vh;padding-top:24px;border-top:1px solid rgba(235,227,221,.12);font-size:.82rem;color:rgba(235,227,221,.55)}
+.foot a:hover{color:var(--cream)}
+.end-mark{position:absolute;right:-6vw;bottom:-8vw;width:44vw;max-width:620px;fill:rgba(235,227,221,.04);pointer-events:none}
+
+/* floating booking pill + chapter dots */
+.fab{position:fixed;right:var(--gutter);bottom:calc(22px + env(safe-area-inset-bottom));z-index:45;padding:14px 22px;border-radius:999px;background:var(--cream);color:var(--maroon);font-weight:600;font-size:.95rem;box-shadow:0 16px 36px rgba(0,0,0,.4);opacity:0;visibility:hidden}
+.chapters{position:fixed;right:22px;top:50%;translate:0 -50%;z-index:44;display:flex;flex-direction:column;gap:14px;opacity:0;visibility:hidden}
+.chapters a{position:relative;display:block;width:10px;height:10px;border-radius:50%;border:1px solid rgba(235,227,221,.55);transition:background .3s,transform .3s}
+.chapters a.on{background:var(--cream);transform:scale(1.3)}
+.chapters a span{position:absolute;right:20px;top:50%;translate:0 -50%;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cream);white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none}
+.chapters a:hover span{opacity:.9}
 
 /* language switch wipe */
 .lang-wipe{position:fixed;inset:0;z-index:55;display:grid;place-items:center;padding:0 var(--gutter);background:var(--sand);color:var(--espresso);text-align:center;pointer-events:none;visibility:hidden}
@@ -159,7 +307,31 @@ em{font-style:italic}
   .ondel{width:34vw;max-width:170px}
   .arch-frame{left:calc(13% - 12px);top:calc(10% - 12px);width:calc(74% + 24px);height:calc(50% + 24px);border-radius:calc(37vw + 12px) calc(37vw + 12px) 38px 38px}
   .bubble{padding:16px 18px}
-  .next-mark{width:80vw;right:-20vw;bottom:-14vw}
+  .chapters{display:none}
+  .loc-pin{grid-template-columns:1fr;align-content:center;gap:2vh;padding-top:64px}
+  .loc-copy .scene-title{font-size:clamp(1.9rem,8vw,2.6rem)}
+  .loc-copy .scene-body{margin-top:12px;font-size:.95rem}
+  .btn-ghost.small{margin-top:16px}
+  .loc-copy .note{margin-top:10px}
+  .map{width:100%;max-width:440px;max-height:48vh}
+  .dest-name{font-size:25px}
+  .dest-min{font-size:22px}
+  .ring-lab{font-size:17px}
+  .home-lab{font-size:21px}
+  .end{padding-bottom:calc(6vh + 72px)}
+  .rooms-intro{flex-basis:78vw}
+  .room-card{flex-basis:76vw;height:62vh}
+  .bal-pin{grid-template-columns:1fr;align-content:center;justify-items:center;gap:4vh;padding-top:56px}
+  .bal-window{width:68vw;height:50vh}
+  .bal-copy{justify-self:stretch}
+  .bal-copy .scene-title{font-size:clamp(1.9rem,8vw,2.6rem)}
+  .sticker-area{height:72vh}
+  .stk{left:var(--mx);top:var(--my);padding:12px 18px;border-width:4px;font-size:1rem}
+  .book-grid{grid-template-columns:1fr;gap:8vh}
+  .msg{max-width:100%}
+  .field{min-width:0;flex:1 1 130px}
+  .end-mark{width:80vw;right:-20vw;bottom:-14vw}
+  .fab{right:16px;padding:12px 18px;font-size:.88rem}
 }
 @media (prefers-reduced-motion:reduce){
   .grain,.btn-enter::after,.eyebrow::before,.scroll-cue i{animation:none}
@@ -168,6 +340,9 @@ em{font-style:italic}
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
 <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MotionPathPlugin.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/InertiaPlugin.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
 </head>
 <body>
@@ -198,7 +373,7 @@ em{font-style:italic}
 <canvas id="webgl" aria-hidden="true"></canvas>
 <div class="vignette" id="vignette" aria-hidden="true"></div>
 <div class="mark2d" id="mark2d" aria-hidden="true"><svg viewBox="-40 -40 1225 1668"><use href="#mark"/></svg></div>
-<div class="portal2d" id="portal2d" aria-hidden="true"><img src="assets/lobby.jpg" alt=""></div>
+<div class="portal2d" id="portal2d" aria-hidden="true"></div>
 
 <section class="gate" id="gate" aria-label="Pintu masuk">
   <div class="gate-ui" id="gateUi">
@@ -213,10 +388,12 @@ em{font-style:italic}
   <button type="button" class="skip" id="skip" data-i18n="skip">lewati intro →</button>
 </section>
 <div class="flash" id="flash" aria-hidden="true"></div>
+<a class="fab" id="fab" href="#booking"><span data-i18n="fab">🔑 booking</span></a>
+<nav class="chapters" id="chapters" aria-label="Bagian halaman"></nav>
 <div class="lang-wipe" id="langWipe" aria-hidden="true"><span id="langWipeTxt"></span></div>
 
 <main id="main">
-  <section class="lobby" id="lobby" aria-label="Lobi">
+  <section class="lobby" id="lobby" data-chapter="lobi" aria-label="Lobi">
     <div class="lobby-pin" id="lobbyPin">
       <div class="lobby-media" id="lobbyMedia">
         <div class="lobby-shift" id="lobbyShift"><img id="lobbyImg" src="assets/lobby.jpg" alt="Ruang duduk di lobi Safira Homestay dengan kursi kayu" fetchpriority="high"></div>
@@ -229,22 +406,253 @@ em{font-style:italic}
       </div>
       <div class="lobby-ondel">
         <figure class="ondel" id="ondel"><div class="ondel-wave" id="ondelWave"><div class="ondel-card"><img src="assets/ondel.jpg" alt="Sepasang ondel-ondel di meja resepsionis" loading="lazy"></div></div></figure>
-        <div class="bubble" id="bubble"><p data-i18n="ondel1">ada yang nyambut kamu di lobi 👋</p><p class="small" data-i18n="ondel2">kenalin, sepasang ondel-ondel. tenang, gak gigit kok.</p></div>
+        <div class="bubble" id="bubble"><p data-i18n="ondel1">ada yang nyambut kamu di lobi 👋</p><p class="small" data-i18n="ondel2">kenalin, sepasang ondel-ondel mini. sekalian ngenalin budaya Betawi ke tamu luar negeri, ya kann</p></div>
       </div>
       <div class="scroll-cue" id="scrollCue"><span data-i18n="scrollCue">scroll pelan-pelan</span><i></i></div>
     </div>
   </section>
 
-  <section class="next" id="next">
-    <svg class="next-mark" viewBox="-40 -40 1225 1668" aria-hidden="true"><use href="#mark"/></svg>
-    <p class="next-kicker reveal-up" data-i18n="nextKicker">bersambung…</p>
-    <h2 class="next-title reveal-up" data-i18n="nextTitle">abis ini: <em>lokasi</em>, <em>kamar</em>, sama <em>balkon</em>.</h2>
-    <p class="next-body reveal-up" data-i18n="nextBody">ini baru adegan pembuka. kalo vibes-nya udah cocok, sisanya kita gas.</p>
-    <div class="next-actions reveal-up">
-      <button type="button" class="btn-enter magnetic" id="replay"><span data-i18n="replay">ulang dari pintu ↺</span></button>
-      <a class="btn-ghost" href="https://wa.me/6282151151873" target="_blank" rel="noopener" data-i18n="chat">chat admin 💬</a>
+  <!-- 3 · lokasi -->
+  <section class="scene loc" id="lokasi" data-chapter="lokasi" aria-label="Lokasi">
+    <div class="loc-pin" id="locPin">
+      <div class="loc-copy">
+        <p class="kicker" data-i18n="lokKicker">lokasi</p>
+        <h2 class="scene-title" data-i18n="lokTitle">landing di Halim, <em>5 menit</em> kemudian udah rebahan.</h2>
+        <p class="scene-body" data-i18n="lokBody">deket bandara, deket stasiun Whoosh, deket tol. mau ke mana-mana tinggal gas.</p>
+        <a class="btn-ghost small" href="https://maps.app.goo.gl/HeUpbVfFSv11maqf6" target="_blank" rel="noopener" data-i18n="maps">buka Google Maps 📍</a>
+        <p class="note" data-i18n="lokNote">perkiraan waktu berkendara · arah cuma ilustrasi</p>
+      </div>
+      <svg class="map" id="map" viewBox="0 0 600 600" role="img" aria-label="Peta waktu tempuh: Bandara Halim 5 menit, Stasiun Whoosh, PGC Cililitan dan akses tol 10 menit, TMII 15 menit">
+        <defs>
+          <radialGradient id="mapGlow"><stop offset="0" stop-color="#7a0c18" stop-opacity=".6"/><stop offset="1" stop-color="#7a0c18" stop-opacity="0"/></radialGradient>
+        </defs>
+        <circle cx="300" cy="300" r="295" fill="url(#mapGlow)"/>
+        <g class="map-rings">
+          <circle class="map-ring" cx="300" cy="300" r="110"/>
+          <circle class="map-ring" cx="300" cy="300" r="200"/>
+          <circle class="map-ring" cx="300" cy="300" r="272"/>
+          <text class="ring-lab" x="300" y="183">5 menit</text>
+          <text class="ring-lab" x="300" y="93">10 menit</text>
+          <text class="ring-lab" x="300" y="21">15 menit</text>
+        </g>
+        <path id="flightPath" d="M640 40C540 20 420 110 390 363" fill="none"/>
+        <path class="route" id="routeLine" d="M390 363Q362 318 300 300"/>
+        <g class="dest" data-x="390" data-y="363"><circle class="pulse" cx="390" cy="363" r="8"/><circle class="dot" cx="390" cy="363" r="8"/><text class="dest-name" x="406" y="390">Bandara Halim</text><text class="dest-min" x="406" y="414"><tspan class="mins" data-to="5">5</tspan> menit</text></g>
+        <g class="dest dest-later" data-x="429" data-y="147"><circle class="dot" cx="429" cy="147" r="7"/><text class="dest-name" x="444" y="140">Stasiun Whoosh</text><text class="dest-min" x="444" y="163"><tspan class="mins" data-to="10">10</tspan> menit</text></g>
+        <g class="dest dest-later" data-x="103" data-y="265"><circle class="dot" cx="103" cy="265" r="7"/><text class="dest-name ta-mid" x="103" y="226">PGC Cililitan</text><text class="dest-min ta-mid" x="103" y="248"><tspan class="mins" data-to="10">10</tspan> menit</text></g>
+        <g class="dest dest-later" data-x="185" data-y="136"><circle class="dot" cx="185" cy="136" r="7"/><text class="dest-name ta-mid" x="185" y="97">Akses tol</text><text class="dest-min ta-mid" x="185" y="119"><tspan class="mins" data-to="10">10</tspan> menit</text></g>
+        <g class="dest dest-later" data-x="253" data-y="566"><circle class="dot" cx="253" cy="566" r="7"/><text class="dest-name ta-end" x="238" y="560">TMII</text><text class="dest-min ta-end" x="238" y="583"><tspan class="mins" data-to="15">15</tspan> menit</text></g>
+        <g class="map-home" id="mapHome">
+          <circle cx="300" cy="300" r="34" class="home-ring"/>
+          <circle cx="300" cy="300" r="26" class="home-bg"/>
+          <svg x="287" y="283" width="26" height="34" viewBox="-40 -40 1225 1668"><use href="#mark"/></svg>
+          <text class="home-lab" x="300" y="356" data-i18n="youAreHere">kamu nginep di sini</text>
+        </g>
+        <g id="plane"><path class="plane" d="M20 0C18-2 17-2.5 15-2.5L-16-2.5C-18-2.5-18 2.5-16 2.5L15 2.5C17 2.5 18 2 20 0ZM3-2.5-6-17-10-17-5-2.5ZM3 2.5-6 17-10 17-5 2.5ZM-12-2.5-17-9-19.5-9-16.5-2.5ZM-12 2.5-17 9-19.5 9-16.5 2.5Z"/></g>
+      </svg>
     </div>
-    <p class="proto-tag">prototipe v1 · safirahalim.com</p>
+  </section>
+
+  <!-- 4 · kamar -->
+  <section class="scene rooms" id="kamar" data-chapter="kamar" aria-label="Kamar">
+    <div class="rooms-pin" id="roomsPin">
+      <div class="room-track" id="roomTrack">
+        <div class="rooms-intro">
+          <p class="kicker" data-i18n="kamKicker">pilih kamar</p>
+          <h2 class="scene-title" data-i18n="kamTitle">tiga kamar, satu vibes: <em>betah.</em></h2>
+          <p class="scene-body" data-i18n="kamHint">klik kartunya buat liat detail →</p>
+        </div>
+        <article class="room-card" data-room="double" data-name="Suite Double" data-price="300000">
+          <div class="rc-inner">
+            <div class="rc-face rc-front">
+              <img src="assets/room-double.jpg" alt="Kamar Suite Double dengan satu kasur besar" loading="lazy">
+              <span class="rc-tag" data-i18n="rDoubleTag">buat berdua</span>
+              <div class="rc-meta">
+                <h3>Suite Double</h3>
+                <p data-i18n="rDoubleLine">kasur gede, buat berdua atau solo traveler yang tidurnya muter-muter.</p>
+                <div class="rc-row"><span class="rc-price">Rp300rb<small>/malam</small></span><button type="button" class="rc-more" data-i18n="seeDetail">detail ↻</button></div>
+              </div>
+            </div>
+            <div class="rc-face rc-back">
+              <span class="rc-tag" data-i18n="rDoubleTag">buat berdua</span>
+              <h3>Suite Double</h3>
+              <p class="rc-big">Rp300rb<small>/malam</small></p>
+              <ul class="rc-feat"><li>1 kasur double</li><li>AC</li><li>kamar mandi dalam</li><li>balkon</li></ul>
+              <button type="button" class="btn-enter rc-pick" data-room="double"><span data-i18n="pickRoom">pilih kamar ini →</span></button>
+              <button type="button" class="rc-back-btn" data-i18n="flipBack">balik ↺</button>
+            </div>
+          </div>
+        </article>
+        <article class="room-card" data-room="twin" data-name="Suite Twin" data-price="300000">
+          <div class="rc-inner">
+            <div class="rc-face rc-front">
+              <img src="assets/room-twin.jpg" alt="Kamar Suite Twin dengan dua kasur single" loading="lazy">
+              <span class="rc-tag" data-i18n="rTwinTag">buat bestie</span>
+              <div class="rc-meta">
+                <h3>Suite Twin</h3>
+                <p data-i18n="rTwinLine">dua kasur terpisah. buat bestie atau rekan dinas, no rebutan selimut.</p>
+                <div class="rc-row"><span class="rc-price">Rp300rb<small>/malam</small></span><button type="button" class="rc-more" data-i18n="seeDetail">detail ↻</button></div>
+              </div>
+            </div>
+            <div class="rc-face rc-back">
+              <span class="rc-tag" data-i18n="rTwinTag">buat bestie</span>
+              <h3>Suite Twin</h3>
+              <p class="rc-big">Rp300rb<small>/malam</small></p>
+              <ul class="rc-feat"><li>2 kasur single</li><li>AC</li><li>kamar mandi dalam</li><li>balkon</li></ul>
+              <button type="button" class="btn-enter rc-pick" data-room="twin"><span data-i18n="pickRoom">pilih kamar ini →</span></button>
+              <button type="button" class="rc-back-btn" data-i18n="flipBack">balik ↺</button>
+            </div>
+          </div>
+        </article>
+        <article class="room-card" data-room="family" data-name="Suite Family" data-price="400000">
+          <div class="rc-inner">
+            <div class="rc-face rc-front">
+              <img src="assets/room-family.jpg" alt="Kamar Suite Family yang luas" loading="lazy">
+              <span class="rc-tag" data-i18n="rFamilyTag">buat rombongan</span>
+              <div class="rc-meta">
+                <h3>Suite Family</h3>
+                <p data-i18n="rFamilyLine">lebih luas, muat satu keluarga. bawa anak, bawa cerita.</p>
+                <div class="rc-row"><span class="rc-price">Rp400rb<small>/malam</small></span><button type="button" class="rc-more" data-i18n="seeDetail">detail ↻</button></div>
+              </div>
+            </div>
+            <div class="rc-face rc-back">
+              <span class="rc-tag" data-i18n="rFamilyTag">buat rombongan</span>
+              <h3>Suite Family</h3>
+              <p class="rc-big">Rp400rb<small>/malam</small></p>
+              <ul class="rc-feat"><li>kapasitas keluarga</li><li>AC</li><li>kamar mandi dalam</li><li>balkon</li></ul>
+              <button type="button" class="btn-enter rc-pick" data-room="family"><span data-i18n="pickRoom">pilih kamar ini →</span></button>
+              <button type="button" class="rc-back-btn" data-i18n="flipBack">balik ↺</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · balkon -->
+  <section class="scene balcony" id="balkon" data-chapter="balkon" aria-label="Balkon">
+    <div class="bal-pin" id="balPin">
+      <div class="bal-window" id="balWindow">
+        <img src="assets/balcony.jpg" alt="Balkon dengan kursi santai dan pepohonan rindang" loading="lazy" id="balImg">
+        <div class="bal-glow" id="balGlow"></div>
+        <div class="curtain left" id="curtainL"></div>
+        <div class="curtain right" id="curtainR"></div>
+      </div>
+      <div class="bal-copy" id="balCopy">
+        <p class="kicker" data-i18n="balKicker">balkon</p>
+        <h2 class="scene-title" data-i18n="balTitle">buka tirai, seruput kopi, <em>liat pohon.</em></h2>
+        <p class="scene-body" data-i18n="balBody">healing tipis-tipis tanpa harus ke Puncak.</p>
+      </div>
+      <p class="bal-cue" id="balCue" data-i18n="balCue">scroll buat buka tirainya ↓</p>
+    </div>
+  </section>
+
+  <!-- 6 · fasilitas -->
+  <section class="scene facil" id="fasilitas" data-chapter="fasilitas" aria-label="Fasilitas">
+    <div class="fac-head">
+      <p class="kicker" data-i18n="fasKicker">fasilitas</p>
+      <h2 class="scene-title" data-i18n="fasTitle">yang kecil-kecil tapi <em>penting.</em></h2>
+      <p class="scene-body" data-i18n="fasHint">(stikernya bisa digeser-geser, cobain deh)</p>
+    </div>
+    <div class="sticker-area" id="stickerArea">
+      <span class="stk s-sand" style="--x:4%;--y:8%;--r:-8deg;--mx:2%;--my:2%" data-i18n="st1">❄️ AC dingin</span>
+      <span class="stk s-cream" style="--x:29%;--y:2%;--r:6deg;--mx:44%;--my:9%" data-i18n="st2">📶 WiFi lancar</span>
+      <span class="stk s-maroon" style="--x:55%;--y:14%;--r:-4deg;--mx:6%;--my:22%" data-i18n="st3">☕ kopi &amp; teh</span>
+      <span class="stk s-cream" style="--x:77%;--y:4%;--r:9deg;--mx:46%;--my:33%" data-i18n="st4">💧 air mineral</span>
+      <span class="stk s-maroon" style="--x:10%;--y:50%;--r:5deg;--mx:3%;--my:48%" data-i18n="st5">🚿 kamar mandi dalam</span>
+      <span class="stk s-sand" style="--x:44%;--y:46%;--r:-7deg;--mx:42%;--my:61%" data-i18n="st6">🌿 balkon</span>
+      <span class="stk s-cream" style="--x:66%;--y:58%;--r:4deg;--mx:8%;--my:75%" data-i18n="st7">🛍️ sebelah minimarket</span>
+    </div>
+  </section>
+
+  <!-- 7 · ulasan -->
+  <section class="scene reviews" id="ulasan" data-chapter="ulasan" aria-label="Ulasan">
+    <div class="rv-head">
+      <p class="kicker" data-i18n="ulKicker">ulasan</p>
+      <h2 class="scene-title" data-i18n="ulTitle">kata yang udah <em>nginep.</em></h2>
+      <p class="scene-body" data-i18n="ulNote">(asli dari Google, bukan endorse)</p>
+    </div>
+    <div class="rv-thread">
+      <div class="rv">
+        <div class="rv-typing" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="rv-bubble">
+          <div class="rv-who"><span class="rv-ava">S</span><b>Siti Aisah</b><span class="rv-stars" aria-label="5 bintang">★★★★★</span></div>
+          <p>Kamarnya luas, bersih, fasilitas lengkap — mulai dari ketel, kopi, teh, air mineral, lemari pakaian, rak sepatu, sampai gantungan handuk. Lobinya juga viewnya cakep banget. Crew-nya ramah dan sopan. Kalau check-in selalu betah berhari-hari saking nyamannya.</p>
+        </div>
+      </div>
+      <div class="rv right">
+        <div class="rv-typing" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="rv-bubble">
+          <div class="rv-who"><span class="rv-ava">M</span><b>Maharani Aulia Putri</b><span class="rv-stars" aria-label="5 bintang">★★★★★</span></div>
+          <p>Kamarnya luas banget, lokasi strategis, nyaman banget, pelayanannya ramah pol. Bakal langganan ke sini, mantap banget — bersih dan wangi ruangannya, handuknya, semuanya pokoknya.</p>
+        </div>
+      </div>
+      <div class="rv">
+        <div class="rv-typing" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="rv-bubble">
+          <div class="rv-who"><span class="rv-ava">Y</span><b>Yulius Simon</b><span class="rv-stars" aria-label="5 bintang">★★★★★</span></div>
+          <p>Pilihan terbaik untuk menginap. Kamar besar dan bersih, AC dingin. Dekat juga dari Bandara Halim Perdana Kusuma. Mau cari makan gampang, sepanjang jalan banyak yang jualan. Posisinya sebelah Indomaret dan Alfamart, jadi serba gampang.</p>
+        </div>
+      </div>
+    </div>
+    <div class="rv-foot">
+      <span class="rv-score">5.0</span><span class="rv-stars big" aria-hidden="true">★★★★★</span>
+      <a class="link-line" href="https://maps.app.goo.gl/HeUpbVfFSv11maqf6" target="_blank" rel="noopener" data-i18n="moreReviews">baca ulasan lainnya di Google Maps →</a>
+    </div>
+  </section>
+
+  <!-- 8 · booking -->
+  <section class="scene book" id="booking" data-chapter="booking" aria-label="Booking">
+    <div class="book-head">
+      <p class="kicker" data-i18n="bkKicker">booking</p>
+      <h2 class="scene-title" data-i18n="bkTitle">udah kepo, sekarang <em>gas booking.</em></h2>
+    </div>
+    <div class="book-grid">
+      <div class="chat" id="bookChat">
+        <div class="msg bot" data-i18n="q1">kapan mau dateng?</div>
+        <div class="msg me dates">
+          <label class="field"><span data-i18n="lIn">check-in</span><input type="date" id="bkIn"></label>
+          <label class="field"><span data-i18n="lOut">check-out</span><input type="date" id="bkOut"></label>
+        </div>
+        <div class="msg bot" data-i18n="q2">berapa orang?</div>
+        <div class="msg me">
+          <div class="stepper" role="group" aria-label="Jumlah tamu">
+            <button type="button" id="gMinus" aria-label="Kurangi jumlah tamu">−</button>
+            <output id="bkGuests">2</output>
+            <button type="button" id="gPlus" aria-label="Tambah jumlah tamu">+</button>
+            <span data-i18n="people">orang</span>
+          </div>
+        </div>
+        <div class="msg bot" data-i18n="q3">kamar yang mana?</div>
+        <div class="msg me chips" id="roomChips" role="group" aria-label="Tipe kamar"></div>
+        <div class="msg bot sum" id="bkSum" aria-live="polite"></div>
+      </div>
+      <a class="key-zone" id="bookKey" href="https://wa.me/6282151151873" target="_blank" rel="noopener">
+        <span class="key" aria-hidden="true">
+          <span class="key-ring"></span>
+          <span class="key-tag"><svg viewBox="-40 -40 1225 1668"><use href="#mark"/></svg><b>safira</b><small id="keyRoom">Suite Double</small></span>
+        </span>
+        <span class="key-cta" data-i18n="keyCta">ambil kuncinya 🔑</span>
+        <span class="note" data-i18n="keyHint">klik kuncinya, langsung nyambung ke WhatsApp admin</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- 9 · penutup -->
+  <section class="scene end" id="penutup" aria-label="Penutup">
+    <svg class="end-mark" viewBox="-40 -40 1225 1668" aria-hidden="true"><use href="#mark"/></svg>
+    <h2 class="end-title reveal-up" data-i18n="endTitle">udah sampe bawah aja nih. <em>kepo-nya kebayar</em> kan? 😌</h2>
+    <p class="scene-body reveal-up" data-i18n="endBody">sampai ketemu di Safira. pintunya selalu kebuka buat kamu.</p>
+    <div class="end-actions reveal-up">
+      <a class="btn-enter" href="https://wa.me/6282151151873" target="_blank" rel="noopener"><span data-i18n="chat">chat admin 💬</span></a>
+      <a class="btn-ghost" href="https://maps.app.goo.gl/HeUpbVfFSv11maqf6" target="_blank" rel="noopener" data-i18n="maps">buka Google Maps 📍</a>
+      <button type="button" class="btn-ghost" id="replay"><span data-i18n="replay">ulang dari pintu ↺</span></button>
+    </div>
+    <footer class="foot">
+      <span>Safira Homestay · Halim Perdana Kusuma, Jakarta Timur</span>
+      <a href="https://wa.me/6282151151873" target="_blank" rel="noopener">WhatsApp 0821-5115-1873</a>
+      <span class="proto-tag">prototipe v2 · <span id="year">2026</span></span>
+    </footer>
   </section>
 </main>
 
@@ -258,8 +666,8 @@ setTimeout(function () {
 }, 15000);
 </script>
 <script type="module">
-const gsap = window.gsap, ScrollTrigger = window.ScrollTrigger, Lenis = window.Lenis;
-gsap.registerPlugin(ScrollTrigger);
+const { gsap, ScrollTrigger, MotionPathPlugin, Draggable, InertiaPlugin, Lenis } = window;
+gsap.registerPlugin(ScrollTrigger, MotionPathPlugin, Draggable, InertiaPlugin);
 
 const $ = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => [...c.querySelectorAll(s)];
@@ -287,12 +695,52 @@ const COPY = {
     lobbySticker: '(tapi tetep check-out ya 😌)',
     scrollCue: 'scroll pelan-pelan',
     ondel1: 'ada yang nyambut kamu di lobi 👋',
-    ondel2: 'kenalin, sepasang ondel-ondel. tenang, gak gigit kok.',
-    nextKicker: 'bersambung…',
-    nextTitle: 'abis ini: <em>lokasi</em>, <em>kamar</em>, sama <em>balkon</em>.',
-    nextBody: 'ini baru adegan pembuka. kalo vibes-nya udah cocok, sisanya kita gas.',
+    ondel2: 'kenalin, sepasang ondel-ondel mini. sekalian ngenalin budaya Betawi ke tamu luar negeri, ya kann',
+    lokKicker: 'lokasi',
+    lokTitle: 'landing di Halim, <em>5 menit</em> kemudian udah rebahan.',
+    lokBody: 'deket bandara, deket stasiun Whoosh, deket tol. mau ke mana-mana tinggal gas.',
+    lokNote: 'perkiraan waktu berkendara · arah cuma ilustrasi',
+    youAreHere: 'kamu nginep di sini',
+    maps: 'buka Google Maps 📍',
+    kamKicker: 'pilih kamar',
+    kamTitle: 'tiga kamar, satu vibes: <em>betah.</em>',
+    kamHint: 'klik kartunya buat liat detail →',
+    kamHintTouch: 'tap kartunya buat liat detail →',
+    seeDetail: 'detail ↻',
+    rDoubleTag: 'buat berdua',
+    rDoubleLine: 'kasur gede, buat berdua atau solo traveler yang tidurnya muter-muter.',
+    rTwinTag: 'buat bestie',
+    rTwinLine: 'dua kasur terpisah. buat bestie atau rekan dinas, no rebutan selimut.',
+    rFamilyTag: 'buat rombongan',
+    rFamilyLine: 'lebih luas, muat satu keluarga. bawa anak, bawa cerita.',
+    pickRoom: 'pilih kamar ini →',
+    flipBack: 'balik ↺',
+    balKicker: 'balkon',
+    balTitle: 'buka tirai, seruput kopi, <em>liat pohon.</em>',
+    balBody: 'healing tipis-tipis tanpa harus ke Puncak.',
+    balCue: 'scroll buat buka tirainya ↓',
+    fasKicker: 'fasilitas',
+    fasTitle: 'yang kecil-kecil tapi <em>penting.</em>',
+    fasHint: '(stikernya bisa digeser-geser, cobain deh)',
+    fasHintTouch: '(coba tap stikernya)',
+    st1: '❄️ AC dingin', st2: '📶 WiFi lancar', st3: '☕ kopi &amp; teh', st4: '💧 air mineral',
+    st5: '🚿 kamar mandi dalam', st6: '🌿 balkon', st7: '🛍️ sebelah minimarket',
+    ulKicker: 'ulasan',
+    ulTitle: 'kata yang udah <em>nginep.</em>',
+    ulNote: '(asli dari Google, bukan endorse)',
+    moreReviews: 'baca ulasan lainnya di Google Maps →',
+    bkKicker: 'booking',
+    bkTitle: 'udah kepo, sekarang <em>gas booking.</em>',
+    q1: 'kapan mau dateng?', q2: 'berapa orang?', q3: 'kamar yang mana?',
+    lIn: 'check-in', lOut: 'check-out', people: 'orang',
+    night: 'malam', estimate: 'estimasi', sumNote: 'harga final dikonfirmasi admin ya', pickDates: 'pilih tanggalnya dulu ya 👆',
+    keyCta: 'ambil kuncinya 🔑',
+    keyHint: 'klik kuncinya, langsung nyambung ke WhatsApp admin',
+    endTitle: 'udah sampe bawah aja nih. <em>kepo-nya kebayar</em> kan? 😌',
+    endBody: 'sampai ketemu di Safira. pintunya selalu kebuka buat kamu.',
     replay: 'ulang dari pintu ↺',
     chat: 'chat admin 💬',
+    fab: '🔑 booking',
   },
   ortu: {
     loading: 'Memuat halaman…',
@@ -306,12 +754,52 @@ const COPY = {
     lobbySticker: 'Lobi Safira Homestay',
     scrollCue: 'Gulir ke bawah',
     ondel1: 'Sentuhan budaya Betawi menyambut Anda di lobi.',
-    ondel2: 'Sepasang ondel-ondel menghiasi meja resepsionis kami.',
-    nextKicker: 'Bersambung',
-    nextTitle: 'Selanjutnya: <em>lokasi</em>, <em>kamar</em>, dan <em>balkon</em>.',
-    nextBody: 'Ini adalah prototipe bagian pembuka. Bagian berikutnya akan menyusul.',
+    ondel2: 'Sepasang ondel-ondel mini, sekaligus memperkenalkan budaya Betawi kepada tamu mancanegara.',
+    lokKicker: 'Lokasi',
+    lokTitle: 'Hanya <em>5 menit</em> dari Bandara Halim Perdana Kusuma.',
+    lokBody: 'Dekat bandara, stasiun kereta cepat Whoosh, dan akses tol.',
+    lokNote: 'Perkiraan waktu tempuh berkendara · arah bersifat ilustrasi',
+    youAreHere: 'Safira Homestay',
+    maps: 'Lihat di Google Maps',
+    kamKicker: 'Pilihan kamar',
+    kamTitle: 'Tiga pilihan kamar yang <em>nyaman.</em>',
+    kamHint: 'Klik kartu untuk melihat detail →',
+    kamHintTouch: 'Ketuk kartu untuk melihat detail →',
+    seeDetail: 'Detail ↻',
+    rDoubleTag: 'Untuk pasangan',
+    rDoubleLine: 'Satu tempat tidur besar, ideal untuk pasangan atau tamu yang menginap sendiri.',
+    rTwinTag: 'Untuk berdua',
+    rTwinLine: 'Dua tempat tidur terpisah, cocok untuk rekan perjalanan.',
+    rFamilyTag: 'Untuk keluarga',
+    rFamilyLine: 'Ruang lebih luas dan lapang untuk menginap bersama keluarga.',
+    pickRoom: 'Pilih kamar ini →',
+    flipBack: 'Kembali ↺',
+    balKicker: 'Balkon',
+    balTitle: 'Buka tirai, nikmati <em>pagi</em> di balkon.',
+    balBody: 'Kamar dilengkapi balkon dengan pemandangan pepohonan.',
+    balCue: 'Gulir untuk membuka tirai ↓',
+    fasKicker: 'Fasilitas',
+    fasTitle: 'Fasilitas <em>kamar.</em>',
+    fasHint: 'Stiker dapat digeser.',
+    fasHintTouch: 'Ketuk stiker untuk berinteraksi.',
+    st1: '❄️ AC', st2: '📶 WiFi gratis', st3: '☕ Kopi &amp; teh', st4: '💧 Air mineral',
+    st5: '🚿 Kamar mandi dalam', st6: '🌿 Balkon', st7: '🛍️ Dekat minimarket',
+    ulKicker: 'Ulasan',
+    ulTitle: 'Ulasan <em>tamu</em> kami.',
+    ulNote: 'Diambil dari ulasan Google.',
+    moreReviews: 'Baca ulasan lainnya di Google Maps →',
+    bkKicker: 'Pemesanan',
+    bkTitle: 'Pesan kamar <em>sekarang.</em>',
+    q1: 'Kapan rencana menginap?', q2: 'Berapa jumlah tamu?', q3: 'Pilih tipe kamar:',
+    lIn: 'Check-in', lOut: 'Check-out', people: 'orang',
+    night: 'malam', estimate: 'Estimasi', sumNote: 'Harga final dikonfirmasi oleh admin.', pickDates: 'Silakan pilih tanggal terlebih dahulu.',
+    keyCta: 'Pesan via WhatsApp',
+    keyHint: 'Pesan akan terisi otomatis di WhatsApp admin.',
+    endTitle: 'Terima kasih telah <em>berkunjung.</em>',
+    endBody: 'Sampai jumpa di Safira Homestay.',
     replay: 'Ulangi dari awal ↺',
     chat: 'Hubungi admin',
+    fab: 'Pesan kamar',
   },
 };
 const NOPE = ['nggak kepo', 'yakin? 🤨', 'masa sih…', 'klik yang satunya aja', 'ya udah deh, kepo 😅'];
@@ -358,13 +846,14 @@ function placeKnob() {
 function fillCopy() {
   $$('[data-i18n]').forEach(el => {
     let key = el.dataset.i18n;
-    if (key === 'hint' && !finePointer) key = 'hintTouch';
+    if (!finePointer && COPY[lang][key + 'Touch'] != null) key += 'Touch';
     const val = COPY[lang][key];
     if (val == null) return;
     el.innerHTML = val;
     if (el.hasAttribute('data-split')) split(el);
   });
   $('#nope').textContent = NOPE[dodges];
+  if (bookingReady) updateBooking();
 }
 let switching = false;
 function setLang(next) {
@@ -398,6 +887,7 @@ $$('[data-set-lang]').forEach(b => b.addEventListener('click', () => setLang(b.d
 
 /* ---------------------------------------------------------------- state */
 let phase = 'loading';
+let bookingReady = false;
 let dodges = 0;
 let webgl = null;
 root.dataset.lang = lang;
@@ -434,7 +924,7 @@ const MARK = { w: 1145, h: 1588, cx: 572.5, cy: 794 };
 // inner door of the mark, in path units: stems x 259..887, arch top y 73, arch meets the stems at y 374, threshold y 991
 const DOOR = { l: 259, r: 887, top: 73, spring: 374, bottom: 991 };
 const DOOR_Y = MARK.cy - (DOOR.top + DOOR.bottom) / 2;
-const DEPTH = 130, CAM_END_Z = -200, FOV_END = 50, IMG_ASPECT = 1200 / 1600, PORTAL_D = 100;
+const DEPTH = 130, CAM_END_Z = -200, FOV_END = 50, PORTAL_D = 100;
 
 async function initWebGL() {
   const probe = document.createElement('canvas');
@@ -506,13 +996,19 @@ async function initWebGL() {
   mask.renderOrder = 1;
   group.add(mask);
 
-  // the lobby as a portal: a screen-aligned photo seen only through the door (stencil),
-  // always covering the frame, so it can never show an edge and ends exactly like CSS object-fit: cover
-  const photoTex = await new THREE.TextureLoader().loadAsync('assets/lobby.jpg');
-  photoTex.colorSpace = THREE.SRGBColorSpace;
-  photoTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  // light behind the door: a screen-aligned glow seen only through the opening (stencil);
+  // it grows during the flight until it fills the frame, then the page fades into the lobby
+  const lightTex = (() => {
+    const c = document.createElement('canvas'); c.width = c.height = 512;
+    const g = c.getContext('2d'), grd = g.createRadialGradient(256, 256, 0, 256, 256, 256);
+    grd.addColorStop(0, 'rgba(255,246,232,1)'); grd.addColorStop(0.3, 'rgba(250,214,170,.95)');
+    grd.addColorStop(0.62, 'rgba(214,112,72,.5)'); grd.addColorStop(1, 'rgba(120,12,22,0)');
+    g.fillStyle = grd; g.fillRect(0, 0, 512, 512);
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+  })();
   const photoMat = new THREE.MeshBasicMaterial({
-    map: photoTex, toneMapped: false, depthTest: false, depthWrite: false, stencilWrite: true, stencilRef: 1,
+    map: lightTex, toneMapped: false, transparent: true, opacity: 0, blending: THREE.AdditiveBlending,
+    depthTest: false, depthWrite: false, stencilWrite: true, stencilRef: 1,
     stencilFunc: THREE.EqualStencilFunc, stencilFail: THREE.KeepStencilOp, stencilZFail: THREE.KeepStencilOp, stencilZPass: THREE.KeepStencilOp,
   });
   const photo = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), photoMat);
@@ -546,7 +1042,7 @@ async function initWebGL() {
 
   /* --- state + framing */
   const st = {
-    grow: 0.02, spin: 0, rise: 0, halo: 0, dust: 0, focus: 0, fly: 0, zoom: 1.3,
+    grow: 0.02, spin: 0, rise: 0, halo: 0, dust: 0, focus: 0, fly: 0, zoom: 0.45, light: 0,
     baseX: 0, baseY: 0, baseRotX: 0.05, baseRotY: -0.38, dist: 4000, fov0: 35,
     cam: { y: 0, z: 4000, fov: 35 }, crossed: false,
   };
@@ -608,13 +1104,14 @@ async function initWebGL() {
 
     camera.position.set(0, st.cam.y, st.cam.z);
     if (camera.fov !== st.cam.fov) { camera.fov = st.cam.fov; camera.updateProjectionMatrix(); }
-    // portal photo: cover-fit to the current frustum, centred on the door while at the gate, drifting with the pointer
+    // door light: sized from the frustum, centred on the door while at the gate, drifting a little with the pointer
     const hv = 2 * PORTAL_D * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)), wv = hv * camera.aspect;
-    const pw = (wv / hv > IMG_ASPECT ? wv : hv * IMG_ASPECT) * st.zoom, ph = pw / IMG_ASPECT;
-    photo.scale.set(pw, ph, 1);
+    const size = Math.max(wv, hv) * st.zoom;
+    photo.scale.set(size, size, 1);
     const k = PORTAL_D / Math.max(st.cam.z, 1) * (1 - f);
-    photo.position.x = group.position.x * k - ptr.x * (pw - wv) * 0.3 * (1 - f);
-    photo.position.y = (group.position.y + DOOR_Y - st.cam.y) * k + (ptr.y * (ph - hv) * 0.3 + ph * 0.1) * (1 - f); // frame the plant and chair backs, ~10% below the photo centre
+    photo.position.x = group.position.x * k - ptr.x * wv * 0.02 * (1 - f);
+    photo.position.y = (group.position.y + DOOR_Y - st.cam.y) * k + ptr.y * hv * 0.02 * (1 - f);
+    photoMat.opacity = st.light * (0.94 + 0.06 * Math.sin(t * 1.3));
     if (phase === 'flight') {
       const p = gsap.utils.clamp(0, 1, (st.dist - st.cam.z) / (st.dist - CAM_END_Z));
       camera.rotation.z = -0.045 * Math.sin(Math.PI * p);
@@ -629,7 +1126,7 @@ async function initWebGL() {
       a[k + 1] += (10 + s * 26) * dt;
       a[k + 2] += st.fly * dt * (1800 + s * 1400);
       if (a[k + 1] > 2500) a[k + 1] = -1900;
-      if (a[k + 2] > camZ + 120) a[k + 2] -= 6600;
+      if (a[k + 2] > camZ - 260) a[k + 2] -= 6600; // never let a mote get close enough to become a full-screen sprite
     }
     dustGeo.attributes.position.needsUpdate = true;
     renderer.render(scene, camera);
@@ -644,7 +1141,7 @@ async function initWebGL() {
   }
 
   function reset() {
-    Object.assign(st, { grow: 0.02, spin: -1.3, rise: -240, halo: 0, dust: 0, focus: 0, fly: 0, zoom: 1.3, crossed: false });
+    Object.assign(st, { grow: 0.02, spin: -1.3, rise: -240, halo: 0, dust: 0, focus: 0, fly: 0, zoom: 0.45, light: 0, crossed: false });
     photoMat.stencilWrite = true; mask.visible = true;
     drag.rot = drag.vel = 0;
     frame();
@@ -658,7 +1155,8 @@ async function initWebGL() {
       .to(st, { spin: 0, duration: 2.2, ease: 'expo.out' }, 0)
       .to(st, { rise: 0, duration: 2.0, ease: 'expo.out' }, 0)
       .to(st, { halo: 1, duration: 2.2, ease: 'power2.out' }, 0.25)
-      .to(st, { dust: 1, duration: 2.4, ease: 'power1.out' }, 0.3);
+      .to(st, { dust: 1, duration: 2.4, ease: 'power1.out' }, 0.3)
+      .to(st, { light: 0.7, duration: 2.2, ease: 'power2.out' }, 0.5);
     return tl;
   }
 
@@ -670,13 +1168,14 @@ async function initWebGL() {
       .to(st.cam, { fov: 66, duration: 1.55, ease: 'power2.in' }, 0.35)
       .to(st.cam, { fov: FOV_END, duration: 0.6, ease: 'power2.out' }, 1.9)
       .to(st, { fly: 1, duration: 1.3, ease: 'power2.in' }, 0.45)
-      .to(st, { zoom: 1, duration: 2.15, ease: 'power2.inOut' }, 0.35)
+      .to(st, { zoom: 3.2, duration: 2.15, ease: 'power3.in' }, 0.35)
+      .to(st, { light: 1, duration: 1.4, ease: 'power2.in' }, 0.45)
       .to(st, { halo: 1.7, duration: 1.4, ease: 'power2.in' }, 0.55);
   }
 
   const stop = () => renderer.setAnimationLoop(null);
   addEventListener('resize', () => { if (phase === 'gate' || phase === 'flight') frame(); });
-  return { intro, fly, stop, tex: photoTex };
+  return { intro, fly, stop };
 }
 
 /* ----------------------------------------------------- loader -> gate */
@@ -760,13 +1259,15 @@ function handoff() {
   $('#gate').classList.add('done');
   gsap.set('#gateBg', { autoAlpha: 0 });
   gsap.to(['#webgl', '#vignette', '#portal2d', '#mark2d'], {
-    autoAlpha: 0, duration: 0.7, ease: 'power1.out',
+    autoAlpha: 0, duration: 1.1, ease: 'power2.out',
     onComplete: () => { webgl?.stop(); gsap.set('#portal2d', { visibility: 'hidden' }); },
   });
   root.classList.remove('locked');
   lenis.start();
   ScrollTrigger.refresh();
   arrive();
+  showFab();
+  gsap.to('#chapters', { autoAlpha: 1, duration: 0.6, delay: 0.8 });
 }
 function arrive() {
   const tl = gsap.timeline();
@@ -836,10 +1337,194 @@ $$('.reveal-up').forEach(el => gsap.fromTo(el, { opacity: 0, y: 50 }, {
   scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none reverse' },
 }));
 
+/* ------------------------------------------------------- scenes 3–9 */
+const ROOMS = $$('.room-card').map(c => ({ id: c.dataset.room, name: c.dataset.name, price: +c.dataset.price }));
+const rupiah = n => 'Rp' + n.toLocaleString('id-ID');
+const reveal = (targets, trigger, start = 'top 78%') => gsap.fromTo(targets, { opacity: 0, y: 44 }, {
+  opacity: 1, y: 0, duration: 1, ease: 'power3.out', stagger: 0.08, scrollTrigger: { trigger, start },
+});
+
+/* chapter dots */
+const chapterLinks = $$('[data-chapter]').map(sec => {
+  const a = document.createElement('a');
+  a.href = '#' + sec.id;
+  a.setAttribute('aria-label', sec.dataset.chapter);
+  a.innerHTML = `<span>${sec.dataset.chapter}</span>`;
+  a.addEventListener('click', e => { e.preventDefault(); lenis.scrollTo(sec, { duration: 1.6 }); });
+  $('#chapters').append(a);
+  return a;
+});
+let inBooking = false;
+function showFab() {
+  const on = phase === 'lobby' && !inBooking;
+  gsap.to('#fab', { autoAlpha: on ? 1 : 0, y: on ? 0 : 20, duration: 0.45, ease: 'power3.out', overwrite: 'auto' });
+}
+$('#fab').addEventListener('click', e => { e.preventDefault(); lenis.scrollTo('#booking', { duration: 1.8 }); });
+
+// Created after the lobby pin so every trigger below measures the page with the pins above it in place.
+mm.add({ desk: '(min-width: 821px)', mob: '(max-width: 820px)' }, () => {
+  /* 3 · lokasi: rings, a plane landing at Halim, the route home, then the other stops */
+  ScrollTrigger.create({ trigger: '#locPin', start: 'top top', end: '+=210%', pin: true, anticipatePin: 1 });
+  reveal('.loc-copy > *', '#lokasi', 'top 70%');
+  const route = $('#routeLine'), rlen = route.getTotalLength();
+  gsap.set(route, { strokeDasharray: rlen, strokeDashoffset: rlen });
+  const lt = gsap.timeline({ scrollTrigger: { trigger: '#lokasi', start: 'top 55%', end: 'bottom bottom', scrub: 1 }, defaults: { ease: 'none' } });
+  lt.fromTo('.map-ring', { scale: 0.2, opacity: 0, svgOrigin: '300 300' }, { scale: 1, opacity: 1, svgOrigin: '300 300', stagger: 0.05, duration: 0.18, ease: 'power2.out' }, 0)
+    .fromTo('.ring-lab', { opacity: 0 }, { opacity: 1, stagger: 0.04, duration: 0.08 }, 0.1)
+    .fromTo('#mapHome', { scale: 0, svgOrigin: '300 300' }, { scale: 1, svgOrigin: '300 300', duration: 0.1, ease: 'back.out(2.5)' }, 0.14)
+    .fromTo('#plane', { opacity: 0 }, { opacity: 1, duration: 0.02 }, 0.24)
+    .to('#plane', { motionPath: { path: '#flightPath', align: '#flightPath', alignOrigin: [0.5, 0.5], autoRotate: true }, duration: 0.26, ease: 'power1.inOut' }, 0.24)
+    .to('#plane', { opacity: 0, duration: 0.04 }, 0.5)
+    .fromTo('.dest:not(.dest-later)', { scale: 0, opacity: 0, svgOrigin: '390 363' }, { scale: 1, opacity: 1, svgOrigin: '390 363', duration: 0.07, ease: 'back.out(2)' }, 0.48)
+    .to(route, { strokeDashoffset: 0, duration: 0.12 }, 0.5)
+    .fromTo('.dest:not(.dest-later) .mins', { textContent: 0 }, { textContent: 5, snap: { textContent: 1 }, duration: 0.1 }, 0.5);
+  $$('.dest-later').forEach((g, i) => {
+    const at = 0.64 + i * 0.06, m = $('.mins', g);
+    const o = `${g.dataset.x} ${g.dataset.y}`;
+    lt.fromTo(g, { scale: 0, opacity: 0, svgOrigin: o }, { scale: 1, opacity: 1, svgOrigin: o, duration: 0.07, ease: 'back.out(2)' }, at)
+      .fromTo(m, { textContent: 0 }, { textContent: +m.dataset.to, snap: { textContent: 1 }, duration: 0.1 }, at);
+  });
+  lt.to({}, { duration: 0.06 });
+
+  /* 4 · kamar: horizontal track, cards swing in as they travel */
+  const track = $('#roomTrack');
+  const dist = () => Math.max(0, track.scrollWidth - document.documentElement.clientWidth);
+  reveal('.rooms-intro > *', '#kamar', 'top 70%');
+  const slide = gsap.to(track, {
+    x: () => -dist(), ease: 'none',
+    scrollTrigger: { trigger: '#roomsPin', start: 'top top', end: () => '+=' + dist(), pin: true, scrub: 1, anticipatePin: 1, invalidateOnRefresh: true },
+  });
+  $$('.room-card').forEach(card => gsap.fromTo(card, { rotateY: -22, y: 50, opacity: 0.4 }, {
+    rotateY: 0, y: 0, opacity: 1, ease: 'none',
+    scrollTrigger: { trigger: card, containerAnimation: slide, start: 'left 95%', end: 'center 60%', scrub: true },
+  }));
+
+  /* 5 · balkon: the curtains part, morning light comes in */
+  ScrollTrigger.create({ trigger: '#balPin', start: 'top top', end: '+=170%', pin: true, anticipatePin: 1 });
+  gsap.timeline({ scrollTrigger: { trigger: '#balkon', start: 'top 55%', end: 'bottom bottom', scrub: 1 }, defaults: { ease: 'none' } })
+    .fromTo('#balWindow', { y: 70 }, { y: 0, duration: 0.2, ease: 'power2.out' }, 0)
+    .to('#balCue', { opacity: 0, duration: 0.05 }, 0.26)
+    .to(['#curtainL', '#curtainR'], { scaleX: 0.14, duration: 0.45, ease: 'power2.inOut' }, 0.26)
+    .fromTo('#balImg', { scale: 1.22 }, { scale: 1, duration: 0.56, ease: 'power2.out' }, 0.26)
+    .fromTo('#balGlow', { opacity: 0 }, { opacity: 1, duration: 0.18 }, 0.4)
+    .to('#balGlow', { opacity: 0.28, duration: 0.24 }, 0.62)
+    .fromTo('#balCopy > *', { opacity: 0, y: 40 }, { opacity: 1, y: 0, stagger: 0.05, duration: 0.14, ease: 'power2.out' }, 0.5)
+    .to({}, { duration: 0.1 });
+
+  /* 6 · fasilitas: stickers drop in */
+  reveal('.fac-head > *', '.fac-head');
+  ScrollTrigger.create({
+    trigger: '#stickerArea', start: 'top 72%', once: true,
+    onEnter: () => gsap.from('.stk', { y: () => -innerHeight * 0.9, rotation: () => gsap.utils.random(-70, 70), opacity: 0, duration: 1.3, ease: 'bounce.out', stagger: 0.09 }),
+  });
+
+  /* 7 · ulasan: "typing…", then the bubble */
+  reveal('.rv-head > *', '.rv-head');
+  $$('.rv').forEach(rv => ScrollTrigger.create({
+    trigger: rv, start: 'top 84%', once: true,
+    onEnter: () => {
+      const right = rv.classList.contains('right');
+      gsap.timeline()
+        .to($('.rv-typing', rv), { opacity: 1, duration: 0.25 })
+        .to($('.rv-typing', rv), { opacity: 0, duration: 0.2 }, reduced ? '+=0' : '+=0.8')
+        .fromTo($('.rv-bubble', rv), { opacity: 0, y: 20, scale: 0.92, transformOrigin: right ? '100% 100%' : '0% 100%' }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'back.out(1.6)' }, '-=0.1');
+    },
+  }));
+  reveal('.rv-foot', '.rv-foot', 'top 92%');
+
+  /* 8 · booking: the chat builds up, the key swings in */
+  reveal('.book-head > *', '.book-head');
+  gsap.fromTo('#bookChat .msg', { opacity: 0, y: 24, scale: 0.96 }, {
+    opacity: 1, y: 0, scale: 1, duration: 0.55, ease: 'back.out(1.6)', stagger: 0.12,
+    scrollTrigger: { trigger: '#bookChat', start: 'top 78%' },
+  });
+  gsap.fromTo('#bookKey', { opacity: 0, y: 60, rotate: -14 }, { opacity: 1, y: 0, rotate: 0, duration: 1.2, ease: 'elastic.out(1,0.6)', scrollTrigger: { trigger: '#bookKey', start: 'top 85%' } });
+
+  /* chapter dots + floating booking pill follow the scroll */
+  $$('[data-chapter]').forEach((sec, i) => ScrollTrigger.create({
+    trigger: sec, start: 'top center', end: 'bottom center',
+    onToggle: self => chapterLinks[i].classList.toggle('on', self.isActive),
+  }));
+  ScrollTrigger.create({ trigger: '#booking', start: 'top 85%', end: 'bottom top', onToggle: self => { inBooking = self.isActive; showFab(); } });
+});
+
+
+/* room cards flip */
+$$('.room-card').forEach(card => card.addEventListener('click', e => {
+  if (e.target.closest('.rc-pick')) return;
+  card.classList.toggle('flipped', !e.target.closest('.rc-back-btn') && !card.classList.contains('flipped'));
+}));
+$$('.rc-pick').forEach(b => b.addEventListener('click', () => { setRoom(b.dataset.room); lenis.scrollTo('#booking', { duration: 1.8 }); }));
+
+/* stickers: drag with a throw on desktop, tap for a flip on touch */
+if (finePointer) {
+  Draggable.create('.stk', {
+    bounds: '#stickerArea', inertia: true,
+    onPress() { gsap.to(this.target, { scale: 1.08, duration: 0.2 }); },
+    onRelease() { gsap.to(this.target, { scale: 1, duration: 0.4, ease: 'back.out(3)' }); },
+  });
+} else {
+  $$('.stk').forEach(s => s.addEventListener('click', () => {
+    if (gsap.isTweening(s)) return;
+    gsap.timeline().to(s, { y: '-=46', rotation: '+=180', duration: 0.32, ease: 'power2.out' }).to(s, { y: '+=46', rotation: '+=180', duration: 0.7, ease: 'bounce.out' });
+  }));
+}
+
+/* booking */
+const bk = { room: 'double', guests: 2 };
+const chips = $('#roomChips');
+ROOMS.forEach(r => {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.dataset.room = r.id;
+  b.textContent = r.name.replace('Suite ', '');
+  b.addEventListener('click', () => setRoom(r.id));
+  chips.append(b);
+});
+const bkIn = $('#bkIn'), bkOut = $('#bkOut');
+const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const parseDate = v => { if (!v) return null; const [y, m, d] = v.split('-').map(Number); return new Date(y, m - 1, d); };
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const fmtDate = new Intl.DateTimeFormat('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+const today = new Date(); today.setHours(0, 0, 0, 0);
+bkIn.min = iso(today); bkIn.value = iso(today);
+bkOut.min = iso(addDays(today, 1)); bkOut.value = iso(addDays(today, 1));
+function setRoom(id) {
+  bk.room = id;
+  $$('button', chips).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.room === id)));
+  updateBooking();
+}
+function updateBooking() {
+  const C = COPY[lang], r = ROOMS.find(x => x.id === bk.room) || ROOMS[0];
+  const ci = parseDate(bkIn.value);
+  let co = parseDate(bkOut.value);
+  if (ci) { bkOut.min = iso(addDays(ci, 1)); if (!co || co <= ci) { co = addDays(ci, 1); bkOut.value = iso(co); } }
+  const nights = ci && co ? Math.round((co - ci) / 864e5) : 0;
+  $('#bkGuests').textContent = bk.guests;
+  $('#gMinus').disabled = bk.guests <= 1;
+  $('#gPlus').disabled = bk.guests >= 10;
+  $('#bkSum').innerHTML = nights
+    ? `${nights} ${C.night} · ${r.name}<br>${C.estimate} <strong>${rupiah(nights * r.price)}</strong><small>${C.sumNote}</small>`
+    : C.pickDates;
+  $('#keyRoom').textContent = r.name;
+  const msg = ['Halo Safira Homestay, saya ingin cek ketersediaan kamar:', '', `Kamar: ${r.name}`];
+  if (ci) msg.push(`Check-in: ${fmtDate.format(ci)}`);
+  if (co) msg.push(`Check-out: ${fmtDate.format(co)}` + (nights ? ` (${nights} malam)` : ''));
+  msg.push(`Jumlah tamu: ${bk.guests} orang`, '', 'Terima kasih.');
+  $('#bookKey').href = `https://wa.me/6282151151873?text=${encodeURIComponent(msg.join('\n'))}`;
+}
+[bkIn, bkOut].forEach(el => el.addEventListener('change', updateBooking));
+$('#gMinus').addEventListener('click', () => { bk.guests = Math.max(1, bk.guests - 1); updateBooking(); });
+$('#gPlus').addEventListener('click', () => { bk.guests = Math.min(10, bk.guests + 1); updateBooking(); });
+bookingReady = true;
+setRoom('double');
+$('#year').textContent = new Date().getFullYear();
+
 /* -------------------------------------------------------------- replay */
 $('#replay').addEventListener('click', () => {
   lenis.scrollTo(0, { immediate: true, force: true });
   lenis.stop();
+  gsap.set(['#fab', '#chapters'], { autoAlpha: 0 });
   root.classList.add('locked');
   dodges = 0;
   nope.classList.remove('give-up');
