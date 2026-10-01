@@ -28,14 +28,27 @@ Semua teks, harga, dan nomor WhatsApp ada di dalam `index.html`. Cari bagian yan
 
 Untuk mengganti foto: ganti file di folder `images/` dengan nama yang sama, atau ubah `src`/`url()` di `index.html`.
 
-## Prototipe `kepo/` (intro 3D)
+## Prototipe `kepo/` (versi "anti-mainstream")
 
-Prototipe pembuka versi "anti-mainstream": gerbang *kepo*, logo Safira 3D, kamera masuk lewat pintu (lengkungan logo), lalu adegan lobi yang bergerak mengikuti scroll. Ada tombol bahasa **gaul / ortu**.
+Landing page bercerita lewat scroll, dengan tombol bahasa **gaul / ortu**. Bisa dibuka di `https://safirahalim.com/kepo/` (halaman ini `noindex`, jadi tidak muncul di Google).
 
-- Halaman: `kepo/index.html` (semua kode di satu file), aset di `kepo/assets/`. Setelah masuk `main`, bisa dibuka di `https://safirahalim.com/kepo/`. Halaman ini `noindex`, jadi tidak muncul di Google.
-- Library dari CDN jsDelivr: Three.js (3D), GSAP + ScrollTrigger (animasi), Lenis (scroll halus). Tanpa build step.
-- Semua teks ada di objek `COPY` (bagian `<script>`), dengan versi `gaul` dan `ortu`.
-- Bentuk logo 3D diambil dari path SVG `#markPath` (hasil jiplak logo asli), sehingga logo di loader, 3D, dan versi 2D selalu sama.
+Urutan adegan:
+1. **Gerbang kepo**: logo Safira 3D, tombol "nggak kepo" yang kabur, cahaya hangat di balik pintu.
+2. **Masuk lewat pintu**: kamera terbang menembus lengkungan logo ke arah cahaya.
+3. **Lobi**: foto lobi berubah jadi bingkai lengkung, stiker ondel-ondel.
+4. **Lokasi**: peta waktu tempuh (5/10/15 menit), pesawat mendarat di Halim.
+5. **Kamar**: kartu geser ke samping, bisa dibalik untuk melihat harga & fasilitas.
+6. **Balkon**: tirai terbuka saat di-scroll.
+7. **Fasilitas**: stiker yang bisa digeser (desktop) atau di-tap (HP).
+8. **Ulasan**: ulasan Google tampil seperti chat.
+9. **Booking**: form gaya chat + gantungan kunci yang membuka WhatsApp dengan pesan terisi.
+10. **Penutup**: kontak, Google Maps, dan tombol "ulang dari pintu".
+
+Cara mengubah:
+- **Teks**: semua ada di objek `COPY` (bagian `<script>`), versi `gaul` dan `ortu`. Kunci yang berakhiran `Touch` dipakai khusus di HP.
+- **Harga kamar**: atribut `data-price` di `<article class="room-card">` (dipakai form booking) dan teks harga di kartu yang sama.
+- **Foto**: `kepo/assets/` (`lobby.jpg`, `room-*.jpg`, `balcony.jpg`, `ondel.jpg`). Ganti file dengan nama yang sama.
+- Library dari CDN jsDelivr: Three.js (3D), GSAP + ScrollTrigger, MotionPath, Draggable, Inertia (animasi), Lenis (scroll halus). Tanpa build step.
 - Perangkat tanpa WebGL atau yang mengaktifkan "kurangi gerakan" otomatis mendapat versi 2D yang lebih ringan.
 
 ## Kontak & tautan yang tertanam
