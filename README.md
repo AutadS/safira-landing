@@ -28,6 +28,16 @@ Semua teks, harga, dan nomor WhatsApp ada di dalam `index.html`. Cari bagian yan
 
 Untuk mengganti foto: ganti file di folder `images/` dengan nama yang sama, atau ubah `src`/`url()` di `index.html`.
 
+## Prototipe `kepo/` (intro 3D)
+
+Prototipe pembuka versi "anti-mainstream": gerbang *kepo*, logo Safira 3D, kamera masuk lewat pintu (lengkungan logo), lalu adegan lobi yang bergerak mengikuti scroll. Ada tombol bahasa **gaul / ortu**.
+
+- Halaman: `kepo/index.html` (semua kode di satu file), aset di `kepo/assets/`. Setelah masuk `main`, bisa dibuka di `https://safirahalim.com/kepo/`. Halaman ini `noindex`, jadi tidak muncul di Google.
+- Library dari CDN jsDelivr: Three.js (3D), GSAP + ScrollTrigger (animasi), Lenis (scroll halus). Tanpa build step.
+- Semua teks ada di objek `COPY` (bagian `<script>`), dengan versi `gaul` dan `ortu`.
+- Bentuk logo 3D diambil dari path SVG `#markPath` (hasil jiplak logo asli), sehingga logo di loader, 3D, dan versi 2D selalu sama.
+- Perangkat tanpa WebGL atau yang mengaktifkan "kurangi gerakan" otomatis mendapat versi 2D yang lebih ringan.
+
 ## Kontak & tautan yang tertanam
 
 - WhatsApp: 0821-5115-1873
