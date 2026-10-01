@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="id" class="locked" data-lang="gaul">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Safira Homestay — kepo? (prototipe)</title>
+<meta name="description" content="Prototipe pembuka Safira Homestay: masuk lewat pintu.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1c0406">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Jost:wght@300..700&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/lobby.jpg" as="image" fetchpriority="high">
+<style>
+:root{
+  --maroon:#660710;
+  --maroon-2:#7d0a15;
+  --espresso:#35120c;
+  --night:#1c0406;
+  --cream:#ebe3dd;
+  --sand:#c5a382;
+  --paper:#f5efe9;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --gutter:clamp(20px,6vw,96px);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--night);color:var(--cream);scrollbar-width:none}
+html::-webkit-scrollbar{display:none}
+html.locked,html.locked body{overflow:hidden;height:100%}
+html.lenis,html.lenis body{height:auto}
+.lenis:not(.lenis-autoToggle).lenis-stopped{overflow:clip}
+body{font-family:'Jost',system-ui,sans-serif;background:var(--night);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+em{font-style:italic}
+:focus-visible{outline:2px solid var(--sand);outline-offset:4px;border-radius:6px}
+.serif{font-family:'Fraunces',Georgia,serif}
+
+/* split text */
+.w{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .05em .14em;margin:0 -.05em -.14em}
+.c{display:inline-block;will-change:transform}
+
+/* grain + vignette + cursor */
+.grain{position:fixed;inset:-50%;z-index:65;pointer-events:none;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain 1s steps(4) infinite}
+@keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-1%)}100%{transform:translate(1%,3%)}}
+.vignette{position:fixed;inset:0;z-index:21;pointer-events:none;background:radial-gradient(ellipse at 60% 45%,transparent 45%,rgba(14,2,3,.65))}
+.cursor{display:none}
+.has-cursor,.has-cursor *{cursor:none!important}
+.has-cursor .cursor{display:block}
+.cursor span{position:fixed;left:0;top:0;z-index:80;pointer-events:none;border-radius:50%;translate:-50% -50%}
+.cursor-dot{width:8px;height:8px;background:var(--cream);mix-blend-mode:difference}
+.cursor-ring{width:42px;height:42px;border:1px solid rgba(235,227,221,.55);transition:width .35s var(--ease-out),height .35s var(--ease-out),background .35s,border-color .35s}
+.cursor-hover .cursor-ring{width:74px;height:74px;background:rgba(235,227,221,.08);border-color:var(--sand)}
+
+/* top bar */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:calc(16px + env(safe-area-inset-top)) var(--gutter) 16px;pointer-events:none}
+.topbar>*{pointer-events:auto}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-style:italic;font-size:1.15rem;letter-spacing:.01em}
+.brand svg{width:22px;height:auto;fill:var(--cream)}
+.lang{position:relative;display:flex;padding:4px;border-radius:999px;background:rgba(235,227,221,.08);border:1px solid rgba(235,227,221,.16);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.lang button{position:relative;z-index:1;padding:8px 14px;border-radius:999px;font-size:.82rem;font-weight:500;letter-spacing:.02em;color:rgba(235,227,221,.7);transition:color .35s}
+.lang button[aria-pressed="true"]{color:var(--maroon)}
+.lang-knob{position:absolute;top:4px;bottom:4px;left:4px;border-radius:999px;background:var(--cream);transition:transform .5s var(--ease-out),width .5s var(--ease-out)}
+
+/* loader */
+.loader{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:var(--night)}
+.ld-box{display:grid;justify-items:center;gap:26px}
+.ld-mark{width:clamp(84px,11vw,120px);height:auto;overflow:visible}
+.ld-mark use{fill:transparent;stroke:var(--sand);stroke-width:22}
+.ld-fill{fill:var(--cream)!important;stroke:none!important;opacity:0}
+.ld-meta{display:flex;gap:14px;align-items:baseline;font-size:.82rem;letter-spacing:.08em;color:rgba(235,227,221,.7)}
+.ld-pct{font-family:'Fraunces',serif;font-size:1.1rem;color:var(--cream);min-width:3ch;text-align:right;font-variant-numeric:tabular-nums}
+
+/* gate */
+#webgl{position:fixed;inset:0;width:100%;height:100%;z-index:20;display:block;pointer-events:none}
+.gate{position:fixed;inset:0;z-index:30;touch-action:none;display:flex;align-items:center;padding:0 var(--gutter)}
+.gate.done{display:none}
+.gate-bg{position:fixed;inset:0;z-index:10;background:radial-gradient(ellipse at 68% 42%,#4a0a10 0%,var(--night) 62%)}
+.gate-ui{position:relative;max-width:min(600px,46vw);padding-top:4vh}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:.76rem;font-weight:500;letter-spacing:.26em;text-transform:uppercase;color:var(--sand);margin-bottom:22px}
+.eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:#7fdc8f;box-shadow:0 0 0 0 rgba(127,220,143,.6);animation:live 1.8s infinite}
+@keyframes live{70%{box-shadow:0 0 0 9px rgba(127,220,143,0)}100%{box-shadow:0 0 0 0 rgba(127,220,143,0)}}
+.gate-title{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(2.5rem,5.4vw,5.2rem);line-height:1.02;letter-spacing:-.02em;margin-bottom:34px}
+.gate-title em,.lobby-title em,.next-title em{position:relative;color:var(--sand);font-weight:300}
+.gate-title em,.lobby-title em{display:inline-block}
+.squiggle{position:absolute;left:0;right:0;bottom:-.12em;width:100%;height:.32em;overflow:visible;pointer-events:none}
+.squiggle path{fill:none;stroke:var(--sand);stroke-width:3;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.gate-actions{position:relative;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.btn-enter{position:relative;display:inline-flex;align-items:center;gap:10px;padding:19px 32px;border-radius:999px;background:var(--cream);color:var(--maroon);font-weight:600;font-size:1.02rem;letter-spacing:.01em;box-shadow:0 18px 40px rgba(0,0,0,.35);transition:background .3s}
+.btn-enter::after{content:"";position:absolute;inset:0;border-radius:inherit;border:1px solid var(--cream);animation:ring 2.4s var(--ease-out) infinite;pointer-events:none}
+@keyframes ring{0%{opacity:.7;transform:scale(1)}80%,100%{opacity:0;transform:scale(1.35,1.6)}}
+.btn-enter:hover{background:#fff}
+.btn-nope{position:relative;padding:10px 6px;font-size:.92rem;color:rgba(235,227,221,.62);border-bottom:1px dashed rgba(235,227,221,.35);white-space:nowrap}
+.btn-nope.give-up{color:var(--cream);border-bottom-color:var(--sand)}
+[data-lang="ortu"] .btn-nope{display:none}
+.gate-hint{margin-top:30px;font-size:.84rem;color:rgba(197,163,130,.8)}
+.skip{position:fixed;right:var(--gutter);bottom:calc(22px + env(safe-area-inset-bottom));z-index:31;font-size:.8rem;letter-spacing:.06em;color:rgba(235,227,221,.55);padding:8px 2px;border-bottom:1px solid rgba(235,227,221,.2);transition:color .3s}
+.skip:hover{color:var(--cream)}
+.flash{position:fixed;inset:0;z-index:40;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 45%,#fff3e3,#f3c69a 45%,rgba(243,198,154,0) 75%)}
+.mark2d{position:fixed;z-index:20;right:12vw;top:50%;width:min(28vw,340px);translate:0 -50%;perspective:900px;display:none}
+.mark2d svg{width:100%;height:auto;fill:var(--cream);filter:drop-shadow(0 30px 50px rgba(0,0,0,.5))}
+.no-webgl .mark2d{display:block}
+.no-webgl #webgl{display:none}
+.portal2d{position:fixed;inset:0;z-index:25;pointer-events:none;visibility:hidden;clip-path:inset(50% 50% 50% 50% round 999px 999px 0 0)}
+.portal2d img{width:100%;height:100%;object-fit:cover}
+
+/* lobby */
+.lobby-pin{position:relative;height:var(--vh,100vh);overflow:hidden;background:var(--espresso)}
+.lobby-media{--it:0%;--ir:0%;--ib:0%;--il:0%;--rad:0px;--rb:0px;position:absolute;inset:0;clip-path:inset(var(--it) var(--ir) var(--ib) var(--il) round var(--rad) var(--rad) var(--rb) var(--rb));will-change:clip-path}
+.arch-frame{position:absolute;left:calc(56% - 16px);top:calc(12% - 16px);width:calc(36% + 32px);height:calc(76% + 32px);border:1.5px solid rgba(197,163,130,.55);border-radius:calc(18vw + 16px) calc(18vw + 16px) 42px 42px;opacity:0;pointer-events:none}
+.lobby-shift{position:absolute;inset:0;will-change:transform}
+.lobby-shift img{width:100%;height:100%;object-fit:cover;object-position:center;transform-origin:50% 50%}
+.lobby-shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(28,4,6,.82) 0%,rgba(28,4,6,.25) 45%,rgba(28,4,6,0) 70%),linear-gradient(90deg,rgba(28,4,6,.55),rgba(28,4,6,0) 60%)}
+.lobby-copy{position:absolute;left:var(--gutter);bottom:15vh;max-width:min(760px,84vw)}
+.lobby-title{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(2.6rem,6.6vw,6.4rem);line-height:.98;letter-spacing:-.025em}
+.sticker{display:inline-block;margin-top:26px;padding:10px 18px;border-radius:999px;background:var(--sand);color:var(--espresso);font-weight:600;font-size:clamp(.9rem,1.4vw,1.05rem);box-shadow:0 14px 30px rgba(0,0,0,.35);transform:rotate(-5deg)}
+.scroll-cue{position:absolute;left:50%;bottom:calc(26px + env(safe-area-inset-bottom));translate:-50% 0;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(235,227,221,.7)}
+.scroll-cue i{width:1px;height:42px;background:linear-gradient(var(--cream),transparent);transform-origin:top;animation:cue 1.8s var(--ease-out) infinite}
+@keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+.lobby-ondel{position:absolute;left:var(--gutter);top:50%;translate:0 -50%;display:flex;align-items:center;gap:clamp(18px,3vw,40px);max-width:46vw;pointer-events:none}
+.ondel{flex-shrink:0;width:clamp(150px,17vw,250px);opacity:0}
+.ondel-wave{transform-origin:50% 100%}
+.ondel-card{aspect-ratio:4/5;border-radius:999px 999px 20px 20px;overflow:hidden;border:7px solid var(--cream);box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.ondel-card img{width:100%;height:100%;object-fit:cover}
+.bubble{position:relative;padding:20px 24px;border-radius:24px 24px 24px 6px;background:var(--cream);color:var(--espresso);box-shadow:0 20px 40px rgba(0,0,0,.35);opacity:0}
+.bubble p{font-family:'Fraunces',serif;font-size:clamp(1.15rem,1.8vw,1.55rem);line-height:1.2}
+.bubble .small{margin-top:10px;font-family:'Jost',sans-serif;font-size:.95rem;line-height:1.45;color:#6d4a3b}
+
+/* next */
+.next{position:relative;padding:22vh var(--gutter) 16vh;background:linear-gradient(180deg,var(--espresso),var(--night) 70%);overflow:hidden}
+.next-kicker{font-size:.8rem;letter-spacing:.26em;text-transform:uppercase;color:var(--sand);margin-bottom:22px}
+.next-title{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(2.4rem,6vw,5.6rem);line-height:1;letter-spacing:-.02em;max-width:14ch}
+.next-body{margin-top:26px;max-width:46ch;font-size:1.05rem;font-weight:300;color:#d8c9be;line-height:1.6}
+.next-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:40px}
+.btn-ghost{display:inline-flex;align-items:center;padding:18px 28px;border-radius:999px;border:1px solid rgba(235,227,221,.35);font-weight:500;transition:background .3s,color .3s}
+.btn-ghost:hover{background:var(--cream);color:var(--maroon)}
+.next .btn-enter::after{display:none}
+.proto-tag{margin-top:12vh;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(235,227,221,.35)}
+.next-mark{position:absolute;right:-6vw;bottom:-8vw;width:44vw;max-width:620px;fill:rgba(235,227,221,.04);pointer-events:none}
+
+/* language switch wipe */
+.lang-wipe{position:fixed;inset:0;z-index:55;display:grid;place-items:center;padding:0 var(--gutter);background:var(--sand);color:var(--espresso);text-align:center;pointer-events:none;visibility:hidden}
+.lang-wipe span{font-family:'Fraunces',serif;font-size:clamp(2rem,6vw,4.6rem);line-height:1.05;letter-spacing:-.02em}
+
+@media (max-width:820px){
+  .gate{align-items:flex-end;padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+  .gate-ui{max-width:none;padding-top:0}
+  .gate-bg{background:radial-gradient(ellipse at 50% 30%,#4a0a10 0%,var(--night) 65%)}
+  .gate-title{font-size:clamp(2.1rem,9.2vw,3.2rem);margin-bottom:26px}
+  .eyebrow{margin-bottom:16px}
+  .gate-hint{margin-top:20px}
+  .btn-enter{padding:17px 26px}
+  .vignette{background:radial-gradient(ellipse at 50% 35%,transparent 40%,rgba(14,2,3,.7))}
+  .mark2d{right:auto;left:50%;top:28%;width:42vw;translate:-50% -50%}
+  .lobby-copy{bottom:18vh}
+  .lobby-ondel{top:auto;bottom:calc(9vh + env(safe-area-inset-bottom));left:var(--gutter);right:var(--gutter);translate:none;max-width:none;align-items:flex-end}
+  .ondel{width:34vw;max-width:170px}
+  .arch-frame{left:calc(13% - 12px);top:calc(10% - 12px);width:calc(74% + 24px);height:calc(50% + 24px);border-radius:calc(37vw + 12px) calc(37vw + 12px) 38px 38px}
+  .bubble{padding:16px 18px}
+  .next-mark{width:80vw;right:-20vw;bottom:-14vw}
+}
+@media (prefers-reduced-motion:reduce){
+  .grain,.btn-enter::after,.eyebrow::before,.scroll-cue i{animation:none}
+}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="-40 -40 1225 1668"><path id="markPath" d="M5.42 1586.49C3.43 1585.49 1.67 1583.61 0.99 1581.76C0.36 1580.07 0.09 1525.8 0.68 1522.24C1.18 1519.28 2.55 1517.26 5.01 1515.87C6.83 1514.83 6.83 1514.83 402.5 1514.65C798.17 1514.48 798.17 1514.48 802.75 1513.75C809.67 1512.65 814.6 1511.47 820.5 1509.5C835.6 1504.46 848.39 1496.59 859.52 1485.5C875.4 1469.67 884.34 1450.49 886.49 1427.67C887.13 1420.82 887.13 1419.11 886.5 1412.67C885.68 1404.37 884.9 1400.34 882.66 1392.81C875.38 1368.45 857.82 1347.42 835.17 1335.97C822.82 1329.73 811.43 1326.59 797.83 1325.68C794.54 1325.46 680.16 1325.34 462.17 1325.34C244.62 1325.33 130.25 1325.22 127.83 1325C109.44 1323.33 93.59 1318.8 77.17 1310.52C55.91 1299.81 37.71 1283.57 24.1 1263.17C19.83 1256.77 13.69 1244.99 10.9 1237.83C7.2 1228.34 4.43 1217.75 2.8 1206.83C1.28 1196.66 1.34 1210.43 1.33 882.83C1.33 679.62 1.44 571.2 1.67 564.83C2.01 554.94 2.78 541.25 3.33 535C3.5 533.07 3.72 530.45 3.83 529.17C4.65 519.26 7.25 498.42 8.84 489C9.11 487.44 9.62 484.37 9.98 482.17C10.97 476.15 11.34 474.22 13.34 464.5C15.86 452.21 20.11 434.67 23.22 423.67C25.02 417.33 31.9 395.14 32.83 392.72C33.09 392.05 34.19 388.95 35.28 385.83C46.31 354.4 61.92 320.5 79.44 289.94C95.09 262.64 113.06 236.46 133.3 211.5C145.37 196.6 158.05 182.6 173.33 167.32C190.08 150.54 203.96 138.07 221 124.46C253.14 98.8 284.6 78.59 320.83 60.33C334.24 53.57 336.07 52.72 351.83 45.82C379.95 33.53 414.98 22.03 445.67 15C477.9 7.61 507.27 3.44 542.17 1.29C551.15 0.74 585.37 0.53 595.57 0.97C609.14 1.55 631.5 3.17 635 3.83C635.46 3.92 637.48 4.15 639.5 4.34C646.88 5.05 662.48 7.42 675.98 9.87C719.46 17.78 760.53 30.35 802.17 48.49C820.95 56.68 848.94 71.15 866.4 81.71C918.63 113.3 964.61 151.89 1004.19 197.35C1054.29 254.9 1092.49 322.08 1116.1 394.17C1122.37 413.31 1126.51 428.41 1130.99 448.5C1131.56 451.07 1132.17 453.77 1132.35 454.5C1133.02 457.27 1134.99 467.69 1136.16 474.67C1136.46 476.41 1136.84 478.66 1137.01 479.67C1137.89 484.72 1139.08 493.37 1140.65 506C1141.55 513.23 1142.58 524.73 1143 532.17C1143.18 535.47 1143.42 538.54 1143.53 539C1144.28 542.15 1144.44 572.5 1144.58 740.67C1144.73 925.92 1144.69 932.76 1143.46 941.83C1141.17 958.71 1137.49 971.45 1131.03 984.83C1126.61 993.99 1122.43 1000.93 1116.97 1008.18C1103.48 1026.11 1086.52 1040.16 1066.83 1049.69C1050.55 1057.59 1036.09 1061.59 1017.5 1063.36C1014.57 1063.64 955.71 1063.78 797.17 1063.9C595.43 1064.05 580.71 1064.02 578.78 1063.5C576.25 1062.81 574.32 1061.25 573.07 1058.88C572.17 1057.17 572.17 1057.17 572.17 1027.67C572.17 998.3 572.17 998.16 572.87 996.64C573.67 994.92 575.47 992.97 577.09 992.09C578.11 991.53 584.66 991.49 707.33 991.32C836.5 991.14 836.5 991.14 840.22 990.41C851.95 988.13 861.45 983.19 869.78 975.05C879.29 965.75 884.79 954.42 886.49 940.65C886.95 936.92 887 907.42 887 663.65C886.99 480.76 886.88 388.69 886.65 384.33C885.72 366.81 884.93 357.51 883.66 349.5C883.46 348.22 883.07 345.74 882.8 344C881.98 338.79 880.58 331.22 879.6 326.67C879.23 324.93 878.8 322.87 878.64 322.11C878.27 320.28 876.07 311.29 875.47 309.17C871.61 295.52 866.55 280.71 862.16 270.17C846.31 232.17 824.66 198.89 796.69 169.5C767.07 138.39 731.17 113.47 692.5 97.18C676.14 90.28 664.04 86.26 646.5 81.87C622.22 75.8 598.85 73 572.7 73C538.55 73.01 506.3 78.26 473.5 89.14C443.09 99.23 412.41 115.26 386.33 134.7C349.64 162.04 320.67 195.16 298.02 235.67C293.55 243.66 286.55 258.17 282.84 267.17C275.76 284.29 269.28 305.38 265.88 322.36C263.13 336.06 261.94 344.03 260.31 359.67C259.2 370.31 259.2 371.09 259.09 786.83C259 1159.21 259.04 1198.9 259.51 1202.67C261.66 1219.83 270.36 1234.03 284.51 1243.51C291.33 1248.08 297.89 1250.66 307.17 1252.41C308.64 1252.69 398.43 1252.84 650 1252.99C990.83 1253.19 990.83 1253.19 996.17 1253.9C1009.27 1255.65 1017.37 1257.43 1028.65 1261.06C1049.42 1267.73 1069.09 1278.72 1085.85 1293.01C1090.64 1297.09 1100.38 1306.84 1104.49 1311.67C1122.94 1333.34 1135.65 1359.47 1141.11 1387C1146.91 1416.23 1145.14 1445.04 1135.84 1472.83C1129.42 1492.03 1118.75 1510.64 1104.94 1526.72C1085.06 1549.89 1058.82 1567.58 1029.61 1577.51C1013.76 1582.9 1000.07 1585.67 984.5 1586.64C981.03 1586.86 809.22 1587.04 493.17 1587.17C7.17 1587.37 7.17 1587.37 5.42 1586.49Z"/></symbol>
+</svg>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor" aria-hidden="true"><span class="cursor-ring"></span><span class="cursor-dot"></span></div>
+
+<header class="topbar">
+  <span class="brand"><svg viewBox="-40 -40 1225 1668" aria-hidden="true"><use href="#mark"/></svg>safira</span>
+  <div class="lang" role="group" aria-label="Pilih gaya bahasa">
+    <span class="lang-knob" aria-hidden="true"></span>
+    <button type="button" data-set-lang="gaul" aria-pressed="true">gaul 😎</button>
+    <button type="button" data-set-lang="ortu" aria-pressed="false">ortu 👴</button>
+  </div>
+</header>
+
+<div class="loader" id="loader" role="status">
+  <div class="ld-box">
+    <svg class="ld-mark" viewBox="-40 -40 1225 1668" aria-hidden="true"><use class="ld-stroke" href="#mark"/><use class="ld-fill" href="#mark"/></svg>
+    <div class="ld-meta"><span data-i18n="loading">lagi beres-beres kamar…</span><span class="ld-pct" id="ldPct">0</span></div>
+  </div>
+</div>
+
+<div class="gate-bg" id="gateBg" aria-hidden="true"></div>
+<canvas id="webgl" aria-hidden="true"></canvas>
+<div class="vignette" id="vignette" aria-hidden="true"></div>
+<div class="mark2d" id="mark2d" aria-hidden="true"><svg viewBox="-40 -40 1225 1668"><use href="#mark"/></svg></div>
+<div class="portal2d" id="portal2d" aria-hidden="true"><img src="assets/lobby.jpg" alt=""></div>
+
+<section class="gate" id="gate" aria-label="Pintu masuk">
+  <div class="gate-ui" id="gateUi">
+    <p class="eyebrow" data-i18n="eyebrow">online · safirahalim.com</p>
+    <h1 class="gate-title" data-i18n="gateTitle" data-split>kepo ya sama penginapan yang katanya <em>recommended?</em></h1>
+    <div class="gate-actions">
+      <button type="button" class="btn-enter magnetic" id="enter"><span data-i18n="enter">klik aja kalo kepo 👀</span></button>
+      <button type="button" class="btn-nope" id="nope">nggak kepo</button>
+    </div>
+    <p class="gate-hint" data-i18n="hint">psst… gerakin mouse-nya, logonya ngikutin</p>
+  </div>
+  <button type="button" class="skip" id="skip" data-i18n="skip">lewati intro →</button>
+</section>
+<div class="flash" id="flash" aria-hidden="true"></div>
+<div class="lang-wipe" id="langWipe" aria-hidden="true"><span id="langWipeTxt"></span></div>
+
+<main id="main">
+  <section class="lobby" id="lobby" aria-label="Lobi">
+    <div class="lobby-pin" id="lobbyPin">
+      <div class="lobby-media" id="lobbyMedia">
+        <div class="lobby-shift" id="lobbyShift"><img id="lobbyImg" src="assets/lobby.jpg" alt="Ruang duduk di lobi Safira Homestay dengan kursi kayu" fetchpriority="high"></div>
+        <div class="lobby-shade" id="lobbyShade"></div>
+      </div>
+      <div class="arch-frame" id="archFrame" aria-hidden="true"></div>
+      <div class="lobby-copy" id="lobbyCopy">
+        <h2 class="lobby-title" data-i18n="lobbyTitle" data-split>welcome!<br>anggep aja rumah <em>sendiri.</em></h2>
+        <span class="sticker" id="sticker" data-i18n="lobbySticker">(tapi tetep check-out ya 😌)</span>
+      </div>
+      <div class="lobby-ondel">
+        <figure class="ondel" id="ondel"><div class="ondel-wave" id="ondelWave"><div class="ondel-card"><img src="assets/ondel.jpg" alt="Sepasang ondel-ondel di meja resepsionis" loading="lazy"></div></div></figure>
+        <div class="bubble" id="bubble"><p data-i18n="ondel1">ada yang nyambut kamu di lobi 👋</p><p class="small" data-i18n="ondel2">kenalin, sepasang ondel-ondel. tenang, gak gigit kok.</p></div>
+      </div>
+      <div class="scroll-cue" id="scrollCue"><span data-i18n="scrollCue">scroll pelan-pelan</span><i></i></div>
+    </div>
+  </section>
+
+  <section class="next" id="next">
+    <svg class="next-mark" viewBox="-40 -40 1225 1668" aria-hidden="true"><use href="#mark"/></svg>
+    <p class="next-kicker reveal-up" data-i18n="nextKicker">bersambung…</p>
+    <h2 class="next-title reveal-up" data-i18n="nextTitle">abis ini: <em>lokasi</em>, <em>kamar</em>, sama <em>balkon</em>.</h2>
+    <p class="next-body reveal-up" data-i18n="nextBody">ini baru adegan pembuka. kalo vibes-nya udah cocok, sisanya kita gas.</p>
+    <div class="next-actions reveal-up">
+      <button type="button" class="btn-enter magnetic" id="replay"><span data-i18n="replay">ulang dari pintu ↺</span></button>
+      <a class="btn-ghost" href="https://wa.me/6282151151873" target="_blank" rel="noopener" data-i18n="chat">chat admin 💬</a>
+    </div>
+    <p class="proto-tag">prototipe v1 · safirahalim.com</p>
+  </section>
+</main>
+
+<script>
+// If the CDN scripts never arrive, don't trap the visitor behind the loader.
+setTimeout(function () {
+  if (window.__safiraReady) return;
+  window.__safiraGaveUp = true;
+  document.documentElement.classList.remove('locked', 'lenis-stopped');
+  ['loader', 'gate', 'webgl', 'gateBg', 'vignette', 'skip'].forEach(function (id) { var el = document.getElementById(id); if (el) el.remove(); });
+}, 15000);
+</script>
+<script type="module">
+const gsap = window.gsap, ScrollTrigger = window.ScrollTrigger, Lenis = window.Lenis;
+gsap.registerPlugin(ScrollTrigger);
+
+const $ = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+const root = document.documentElement;
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* storage blocked */ } },
+};
+const setVH = () => root.style.setProperty('--vh', innerHeight + 'px');
+setVH();
+
+/* ------------------------------------------------------------------ copy */
+const COPY = {
+  gaul: {
+    loading: 'lagi beres-beres kamar…',
+    eyebrow: 'online · safirahalim.com',
+    gateTitle: 'kepo ya sama penginapan yang katanya <em>recommended?</em>',
+    enter: 'klik aja kalo kepo 👀',
+    hint: 'psst… gerakin mouse-nya, logonya ngikutin',
+    hintTouch: 'psst… logonya bisa digeser 👆',
+    skip: 'lewati intro →',
+    lobbyTitle: 'welcome!<br>anggep aja rumah <em>sendiri.</em>',
+    lobbySticker: '(tapi tetep check-out ya 😌)',
+    scrollCue: 'scroll pelan-pelan',
+    ondel1: 'ada yang nyambut kamu di lobi 👋',
+    ondel2: 'kenalin, sepasang ondel-ondel. tenang, gak gigit kok.',
+    nextKicker: 'bersambung…',
+    nextTitle: 'abis ini: <em>lokasi</em>, <em>kamar</em>, sama <em>balkon</em>.',
+    nextBody: 'ini baru adegan pembuka. kalo vibes-nya udah cocok, sisanya kita gas.',
+    replay: 'ulang dari pintu ↺',
+    chat: 'chat admin 💬',
+  },
+  ortu: {
+    loading: 'Memuat halaman…',
+    eyebrow: 'Halim Perdana Kusuma · Jakarta Timur',
+    gateTitle: 'Selamat datang di <em>Safira Homestay.</em>',
+    enter: 'Masuk',
+    hint: 'Gerakkan kursor untuk melihat logo dari berbagai sisi.',
+    hintTouch: 'Geser logo untuk melihat dari berbagai sisi.',
+    skip: 'Lewati intro →',
+    lobbyTitle: 'Selamat datang.<br>Anggap saja rumah <em>sendiri.</em>',
+    lobbySticker: 'Lobi Safira Homestay',
+    scrollCue: 'Gulir ke bawah',
+    ondel1: 'Sentuhan budaya Betawi menyambut Anda di lobi.',
+    ondel2: 'Sepasang ondel-ondel menghiasi meja resepsionis kami.',
+    nextKicker: 'Bersambung',
+    nextTitle: 'Selanjutnya: <em>lokasi</em>, <em>kamar</em>, dan <em>balkon</em>.',
+    nextBody: 'Ini adalah prototipe bagian pembuka. Bagian berikutnya akan menyusul.',
+    replay: 'Ulangi dari awal ↺',
+    chat: 'Hubungi admin',
+  },
+};
+const NOPE = ['nggak kepo', 'yakin? 🤨', 'masa sih…', 'klik yang satunya aja', 'ya udah deh, kepo 😅'];
+
+/* ------------------------------------------------------------ split text */
+const SQUIGGLE = '<svg class="squiggle" viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden="true"><path d="M3 13C40 4 76 18 114 10S190 3 228 11 286 9 297 8"/></svg>';
+function split(el) {
+  const walk = node => [...node.childNodes].forEach(n => {
+    if (n.nodeType === 3) {
+      const frag = document.createDocumentFragment();
+      n.textContent.split(/(\s+)/).forEach(part => {
+        if (!part) return;
+        if (/^\s+$/.test(part)) { frag.append(' '); return; }
+        const w = document.createElement('span');
+        w.className = 'w';
+        Array.from(part).forEach(ch => { const c = document.createElement('span'); c.className = 'c'; c.textContent = ch; w.append(c); });
+        frag.append(w);
+      });
+      n.replaceWith(frag);
+    } else if (n.nodeType === 1 && n.tagName !== 'BR') walk(n);
+  });
+  el.setAttribute('aria-label', el.textContent.replace(/\s+/g, ' ').trim());
+  walk(el);
+  $$('.w', el).forEach(w => w.setAttribute('aria-hidden', 'true'));
+  $$('em', el).forEach(em => em.insertAdjacentHTML('beforeend', SQUIGGLE));
+  $$('.squiggle path', el).forEach(p => { const len = p.getTotalLength(); p.style.strokeDasharray = len; p.style.strokeDashoffset = len; });
+}
+function revealChars(el, delay = 0) {
+  const tl = gsap.timeline({ delay });
+  tl.fromTo($$('.c', el), { yPercent: 118, rotate: 7, opacity: 0 }, { yPercent: 0, rotate: 0, opacity: 1, duration: 1.05, ease: 'power4.out', stagger: 0.014 });
+  const sq = $$('.squiggle path', el);
+  if (sq.length) tl.to(sq, { strokeDashoffset: 0, duration: 0.9, ease: 'power2.inOut' }, '-=0.45');
+  return tl;
+}
+
+/* ------------------------------------------------------------- language */
+let lang = store.get('safira-lang') === 'ortu' ? 'ortu' : 'gaul';
+const knob = $('.lang-knob');
+function placeKnob() {
+  const b = $(`[data-set-lang="${lang}"]`);
+  knob.style.width = b.offsetWidth + 'px';
+  knob.style.transform = `translateX(${b.offsetLeft - 4}px)`;
+}
+function fillCopy() {
+  $$('[data-i18n]').forEach(el => {
+    let key = el.dataset.i18n;
+    if (key === 'hint' && !finePointer) key = 'hintTouch';
+    const val = COPY[lang][key];
+    if (val == null) return;
+    el.innerHTML = val;
+    if (el.hasAttribute('data-split')) split(el);
+  });
+  $('#nope').textContent = NOPE[dodges];
+}
+let switching = false;
+function setLang(next) {
+  if (next === lang || switching || phase === 'flight') return;
+  switching = true;
+  lang = next;
+  root.dataset.lang = lang;
+  store.set('safira-lang', lang);
+  $$('[data-set-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.setLang === lang)));
+  placeKnob();
+  $('#langWipeTxt').textContent = lang === 'ortu' ? 'Baik, kami ganti ke bahasa formal 👴' : 'sip, balik ke mode gaul 😎';
+  const replayTitle = phase === 'gate' ? $('.gate-title') : (phase === 'lobby' && scrollY < innerHeight * 0.3 ? $('.lobby-title') : null);
+  gsap.timeline({ onComplete: () => { switching = false; gsap.set('#langWipe', { autoAlpha: 0 }); } })
+    .fromTo('#langWipe', { yPercent: 100, y: 0, autoAlpha: 1 }, { yPercent: 0, duration: 0.55, ease: 'power3.inOut' })
+    .fromTo('#langWipeTxt', { yPercent: 70, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.45, ease: 'power3.out' }, 0.22)
+    .add(() => {
+      fillCopy();
+      // freshly split titles start hidden only where they are about to be revealed again
+      $$('.gate-title .c, .lobby-title .c').forEach(c => {
+        const hide = phase === 'loading' || c.closest('.gate-title, .lobby-title') === replayTitle || (phase !== 'gate' && c.closest('.gate-title'));
+        gsap.set(c, { opacity: hide ? 0 : 1 });
+      });
+      $$('.squiggle path').forEach(p => { if (!replayTitle || !replayTitle.contains(p)) p.style.strokeDashoffset = 0; });
+      ScrollTrigger.refresh();
+    })
+    .to('#langWipeTxt', { yPercent: -60, opacity: 0, duration: 0.35, ease: 'power2.in' }, '+=0.35')
+    .to('#langWipe', { yPercent: -100, duration: 0.6, ease: 'power3.inOut' }, '-=0.15')
+    .add(() => { if (replayTitle) revealChars(replayTitle); }, '-=0.35');
+}
+$$('[data-set-lang]').forEach(b => b.addEventListener('click', () => setLang(b.dataset.setLang)));
+
+/* ---------------------------------------------------------------- state */
+let phase = 'loading';
+let dodges = 0;
+let webgl = null;
+root.dataset.lang = lang;
+$$('[data-set-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.setLang === lang)));
+fillCopy();
+$$('.gate-title .c, .lobby-title .c').forEach(c => gsap.set(c, { opacity: 0 }));
+gsap.set(['#gateUi .eyebrow', '#gateUi .gate-actions', '#gateUi .gate-hint', '#skip'], { opacity: 0 });
+
+/* ---------------------------------------------------------- smooth scroll */
+const lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add(t => lenis.raf(t * 1000));
+gsap.ticker.lagSmoothing(0);
+lenis.stop();
+
+/* ----------------------------------------------------------------- cursor */
+if (finePointer && !reduced) {
+  root.classList.add('has-cursor');
+  const dot = $('.cursor-dot'), ring = $('.cursor-ring');
+  const dx = gsap.quickTo(dot, 'x', { duration: 0.1, ease: 'power3' }), dy = gsap.quickTo(dot, 'y', { duration: 0.1, ease: 'power3' });
+  const rx = gsap.quickTo(ring, 'x', { duration: 0.5, ease: 'power3' }), ry = gsap.quickTo(ring, 'y', { duration: 0.5, ease: 'power3' });
+  gsap.set([dot, ring], { x: innerWidth / 2, y: innerHeight / 2 });
+  addEventListener('pointermove', e => { dx(e.clientX); dy(e.clientY); rx(e.clientX); ry(e.clientY); });
+  document.addEventListener('pointerover', e => root.classList.toggle('cursor-hover', !!e.target.closest('a,button')));
+}
+if (finePointer) $$('.magnetic').forEach(el => {
+  const x = gsap.quickTo(el, 'x', { duration: 0.6, ease: 'power3' }), y = gsap.quickTo(el, 'y', { duration: 0.6, ease: 'power3' });
+  el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect(); x((e.clientX - r.left - r.width / 2) * 0.35); y((e.clientY - r.top - r.height / 2) * 0.45); });
+  el.addEventListener('pointerleave', () => { x(0); y(0); });
+});
+
+/* ----------------------------------------------------------- the 3D door */
+const MARK = { w: 1145, h: 1588, cx: 572.5, cy: 794 };
+// inner door of the mark, in path units: stems x 259..887, arch top y 73, arch meets the stems at y 374, threshold y 991
+const DOOR = { l: 259, r: 887, top: 73, spring: 374, bottom: 991 };
+const DOOR_Y = MARK.cy - (DOOR.top + DOOR.bottom) / 2;
+const DEPTH = 130, CAM_END_Z = -200, FOV_END = 50, IMG_ASPECT = 1200 / 1600, PORTAL_D = 100;
+
+async function initWebGL() {
+  const probe = document.createElement('canvas');
+  if (!(probe.getContext('webgl2') || probe.getContext('webgl'))) throw new Error('no webgl');
+  const THREE = await import('three');
+  const { SVGLoader } = await import('three/addons/loaders/SVGLoader.js');
+  const { RoomEnvironment } = await import('three/addons/environments/RoomEnvironment.js');
+  const canvas = $('#webgl');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, stencil: true, powerPreference: 'high-performance' });
+  let dpr = Math.min(devicePixelRatio || 1, finePointer ? 2 : 1.6);
+  renderer.setPixelRatio(dpr);
+  renderer.setSize(innerWidth, innerHeight, false);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 0.95;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color('#1c0406');
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  pmrem.dispose();
+  const camera = new THREE.PerspectiveCamera(35, innerWidth / innerHeight, 5, 40000);
+
+  const key = new THREE.DirectionalLight('#ffe2c4', 2.2); key.position.set(-900, 1400, 1800); scene.add(key);
+  const rim = new THREE.DirectionalLight('#c5a382', 1.5); rim.position.set(1600, 300, -800); scene.add(rim);
+  scene.add(new THREE.AmbientLight('#ffffff', 0.22));
+
+  const glowTex = (() => {
+    const c = document.createElement('canvas'); c.width = c.height = 256;
+    const g = c.getContext('2d'), grd = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+    grd.addColorStop(0, 'rgba(255,255,255,1)'); grd.addColorStop(0.25, 'rgba(255,255,255,.45)'); grd.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = grd; g.fillRect(0, 0, 256, 256);
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+  })();
+
+  // far backdrop glow
+  const backdrop = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: '#7a0c18', transparent: true, opacity: 0.55, depthWrite: false }));
+  backdrop.position.set(0, 0, -9000); backdrop.scale.setScalar(26000); scene.add(backdrop);
+
+  const group = new THREE.Group(); scene.add(group);
+  const pivot = new THREE.Group(); group.add(pivot);
+
+  // logo: traced SVG path -> extruded, bevelled mesh (flip y: SVG points down)
+  const d = $('#markPath').getAttribute('d');
+  const svg = new SVGLoader().parse(`<svg xmlns="http://www.w3.org/2000/svg"><path d="${d}"/></svg>`);
+  const shapes = svg.paths.flatMap(p => SVGLoader.createShapes(p));
+  const geo = new THREE.ExtrudeGeometry(shapes, { depth: DEPTH, bevelEnabled: true, bevelThickness: 12, bevelSize: 7, bevelSegments: 6, curveSegments: finePointer ? 44 : 28 });
+  geo.translate(-MARK.cx, -MARK.cy, -DEPTH / 2);
+  const logoMat = new THREE.MeshPhysicalMaterial({ color: '#660710', roughness: 0.3, metalness: 0.15, clearcoat: 0.75, clearcoatRoughness: 0.22 });
+  const logo = new THREE.Mesh(geo, logoMat);
+  logo.scale.y = -1;
+  logo.renderOrder = 0;
+  pivot.add(logo);
+
+  // door opening: writes stencil so the lobby photo only shows through it
+  const toX = x => x - MARK.cx, toY = y => MARK.cy - y, pad = 6;
+  const L = DOOR.l - pad, R = DOOR.r + pad;
+  const door = new THREE.Shape();
+  door.moveTo(toX(L), toY(DOOR.bottom));
+  door.lineTo(toX(L), toY(DOOR.spring));
+  door.absellipse(toX((L + R) / 2), toY(DOOR.spring), (R - L) / 2, DOOR.spring - DOOR.top + pad, Math.PI, 0, true);
+  door.lineTo(toX(R), toY(DOOR.bottom));
+  door.closePath();
+  const mask = new THREE.Mesh(new THREE.ShapeGeometry(door, 64), new THREE.MeshBasicMaterial({
+    colorWrite: false, depthWrite: false, stencilWrite: true, stencilRef: 1,
+    stencilFunc: THREE.AlwaysStencilFunc, stencilZPass: THREE.ReplaceStencilOp,
+  }));
+  mask.position.z = -DEPTH / 2 - 14;
+  mask.renderOrder = 1;
+  group.add(mask);
+
+  // the lobby as a portal: a screen-aligned photo seen only through the door (stencil),
+  // always covering the frame, so it can never show an edge and ends exactly like CSS object-fit: cover
+  const photoTex = await new THREE.TextureLoader().loadAsync('assets/lobby.jpg');
+  photoTex.colorSpace = THREE.SRGBColorSpace;
+  photoTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  const photoMat = new THREE.MeshBasicMaterial({
+    map: photoTex, toneMapped: false, depthTest: false, depthWrite: false, stencilWrite: true, stencilRef: 1,
+    stencilFunc: THREE.EqualStencilFunc, stencilFail: THREE.KeepStencilOp, stencilZFail: THREE.KeepStencilOp, stencilZPass: THREE.KeepStencilOp,
+  });
+  const photo = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), photoMat);
+  photo.renderOrder = 2;
+  photo.frustumCulled = false;
+  photo.position.z = -PORTAL_D;
+  camera.add(photo);
+  scene.add(camera);
+
+  // warm light spilling from the door + halo behind the arch
+  const doorLight = new THREE.PointLight('#ffb27a', 3.5, 2600, 1.2); doorLight.position.set(0, DOOR_Y, 160); group.add(doorLight);
+  // backlight around the arch only: the stencil keeps it off the view through the door
+  const halo = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: glowTex, color: '#ff9a62', transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false,
+    stencilWrite: true, stencilRef: 1, stencilFunc: THREE.NotEqualStencilFunc, stencilZPass: THREE.KeepStencilOp,
+  }));
+  halo.position.set(0, DOOR_Y + 60, -520); halo.scale.setScalar(2700); group.add(halo);
+
+  // dust motes
+  const N = finePointer ? 340 : 170;
+  const pos = new Float32Array(N * 3), seed = new Float32Array(N);
+  for (let i = 0; i < N; i++) {
+    pos[i * 3] = (Math.random() - 0.5) * 5600;
+    pos[i * 3 + 1] = -1900 + Math.random() * 4400;
+    pos[i * 3 + 2] = -2600 + Math.random() * 6600;
+    seed[i] = Math.random();
+  }
+  const dustGeo = new THREE.BufferGeometry(); dustGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const dustMat = new THREE.PointsMaterial({ map: glowTex, color: '#f0c79c', size: 16, sizeAttenuation: true, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
+  const dust = new THREE.Points(dustGeo, dustMat); scene.add(dust);
+
+  /* --- state + framing */
+  const st = {
+    grow: 0.02, spin: 0, rise: 0, halo: 0, dust: 0, focus: 0, fly: 0, zoom: 1.3,
+    baseX: 0, baseY: 0, baseRotX: 0.05, baseRotY: -0.38, dist: 4000, fov0: 35,
+    cam: { y: 0, z: 4000, fov: 35 }, crossed: false,
+  };
+  const ptr = { x: 0, y: 0, tx: 0, ty: 0 };
+  const drag = { on: false, last: 0, rot: 0, vel: 0 };
+
+  function frame() {
+    const aspect = innerWidth / innerHeight, portrait = aspect < 0.9;
+    st.fov0 = portrait ? 40 : 34;
+    const t = Math.tan(THREE.MathUtils.degToRad(st.fov0 / 2));
+    let visH = MARK.h / (portrait ? 0.38 : 0.6);
+    if (portrait) visH = Math.max(visH, MARK.w / (aspect * 0.58));
+    st.dist = visH / (2 * t);
+    st.baseX = portrait ? 0 : visH * aspect * 0.21;
+    st.baseY = portrait ? visH * 0.19 : -visH * 0.01;
+    st.baseRotY = portrait ? -0.26 : -0.38;
+    camera.aspect = aspect;
+    if (phase !== 'flight') { st.cam.z = st.dist; st.cam.y = 0; st.cam.fov = st.fov0; }
+    camera.fov = st.cam.fov;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight, false);
+  }
+  frame();
+
+  /* --- input: pointer parallax, drag-to-spin, tilt */
+  addEventListener('pointermove', e => {
+    ptr.tx = (e.clientX / innerWidth) * 2 - 1;
+    ptr.ty = (e.clientY / innerHeight) * 2 - 1;
+    if (drag.on) { const dxp = e.clientX - drag.last; drag.last = e.clientX; drag.vel = dxp * 0.0055; drag.rot += drag.vel; }
+  });
+  $('#gate').addEventListener('pointerdown', e => { if (e.target.closest('button')) return; drag.on = true; drag.last = e.clientX; drag.vel = 0; });
+  addEventListener('pointerup', () => { drag.on = false; });
+  addEventListener('pointercancel', () => { drag.on = false; });
+  if (!finePointer) addEventListener('deviceorientation', e => {
+    if (e.gamma == null) return;
+    ptr.tx = gsap.utils.clamp(-1, 1, e.gamma / 28);
+    ptr.ty = gsap.utils.clamp(-1, 1, (e.beta - 50) / 28);
+  });
+
+  /* --- render loop */
+  const clock = new THREE.Clock();
+  let frames = 0, slowFrames = 0;
+  function tick() {
+    const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
+    // drop resolution once if the device struggles
+    if (++frames < 120 && dt > 0.028) slowFrames++;
+    if (frames === 120 && slowFrames > 50 && dpr > 1) { dpr = 1; renderer.setPixelRatio(1); renderer.setSize(innerWidth, innerHeight, false); }
+
+    ptr.x += (ptr.tx - ptr.x) * 0.055; ptr.y += (ptr.ty - ptr.y) * 0.055;
+    if (!drag.on) { drag.rot += drag.vel; drag.vel *= 0.93; drag.rot *= 0.97; }
+    const f = st.focus, idle = reduced ? 0 : 1;
+    group.rotation.y = (st.baseRotY + st.spin + ptr.x * 0.34 + drag.rot) * (1 - f);
+    group.rotation.x = (st.baseRotX + ptr.y * 0.15 + Math.sin(t * 0.6) * 0.02 * idle) * (1 - f);
+    group.position.x = st.baseX * (1 - f);
+    group.position.y = (st.baseY + st.rise + Math.sin(t * 0.9) * 16 * idle) * (1 - f);
+    pivot.scale.z = st.grow;
+    halo.material.opacity = 0.42 * st.halo * (0.93 + 0.07 * Math.sin(t * 1.7));
+    doorLight.intensity = 3.5 * (0.6 + 0.4 * Math.min(st.halo, 1.6));
+
+    camera.position.set(0, st.cam.y, st.cam.z);
+    if (camera.fov !== st.cam.fov) { camera.fov = st.cam.fov; camera.updateProjectionMatrix(); }
+    // portal photo: cover-fit to the current frustum, centred on the door while at the gate, drifting with the pointer
+    const hv = 2 * PORTAL_D * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)), wv = hv * camera.aspect;
+    const pw = (wv / hv > IMG_ASPECT ? wv : hv * IMG_ASPECT) * st.zoom, ph = pw / IMG_ASPECT;
+    photo.scale.set(pw, ph, 1);
+    const k = PORTAL_D / Math.max(st.cam.z, 1) * (1 - f);
+    photo.position.x = group.position.x * k - ptr.x * (pw - wv) * 0.3 * (1 - f);
+    photo.position.y = (group.position.y + DOOR_Y - st.cam.y) * k + (ptr.y * (ph - hv) * 0.3 + ph * 0.1) * (1 - f); // frame the plant and chair backs, ~10% below the photo centre
+    if (phase === 'flight') {
+      const p = gsap.utils.clamp(0, 1, (st.dist - st.cam.z) / (st.dist - CAM_END_Z));
+      camera.rotation.z = -0.045 * Math.sin(Math.PI * p);
+      if (!st.crossed && st.cam.z < 60) cross();
+    } else camera.rotation.z = 0;
+
+    dustMat.opacity = 0.55 * st.dust;
+    const a = dustGeo.attributes.position.array, camZ = st.cam.z;
+    for (let i = 0; i < N; i++) {
+      const k = i * 3, s = seed[i];
+      a[k] += Math.sin(t * 0.3 + s * 40) * dt * 9;
+      a[k + 1] += (10 + s * 26) * dt;
+      a[k + 2] += st.fly * dt * (1800 + s * 1400);
+      if (a[k + 1] > 2500) a[k + 1] = -1900;
+      if (a[k + 2] > camZ + 120) a[k + 2] -= 6600;
+    }
+    dustGeo.attributes.position.needsUpdate = true;
+    renderer.render(scene, camera);
+  }
+
+  function cross() {
+    st.crossed = true;
+    photoMat.stencilWrite = false;      // the door now covers the whole frame: draw the lobby everywhere
+    mask.visible = false;
+    gsap.to(st, { halo: 0, duration: 0.7, ease: 'power2.out', overwrite: 'auto' }); // settle into the plain photo before the HTML takes over
+    if (!reduced) gsap.fromTo('#flash', { opacity: 0 }, { opacity: 0.22, duration: 0.14, yoyo: true, repeat: 1, ease: 'power1.out' });
+  }
+
+  function reset() {
+    Object.assign(st, { grow: 0.02, spin: -1.3, rise: -240, halo: 0, dust: 0, focus: 0, fly: 0, zoom: 1.3, crossed: false });
+    photoMat.stencilWrite = true; mask.visible = true;
+    drag.rot = drag.vel = 0;
+    frame();
+  }
+
+  function intro() {
+    reset();
+    renderer.setAnimationLoop(tick);
+    const tl = gsap.timeline();
+    tl.to(st, { grow: 1, duration: 1.7, ease: 'expo.out' }, 0.05)
+      .to(st, { spin: 0, duration: 2.2, ease: 'expo.out' }, 0)
+      .to(st, { rise: 0, duration: 2.0, ease: 'expo.out' }, 0)
+      .to(st, { halo: 1, duration: 2.2, ease: 'power2.out' }, 0.25)
+      .to(st, { dust: 1, duration: 2.4, ease: 'power1.out' }, 0.3);
+    return tl;
+  }
+
+  function fly() {
+    return gsap.timeline()
+      .to(st, { focus: 1, duration: 1.05, ease: 'power3.inOut' }, 0.05)
+      .to(st.cam, { y: DOOR_Y, duration: 1.5, ease: 'power2.inOut' }, 0.15)
+      .to(st.cam, { z: CAM_END_Z, duration: 2.15, ease: 'power4.inOut' }, 0.35)
+      .to(st.cam, { fov: 66, duration: 1.55, ease: 'power2.in' }, 0.35)
+      .to(st.cam, { fov: FOV_END, duration: 0.6, ease: 'power2.out' }, 1.9)
+      .to(st, { fly: 1, duration: 1.3, ease: 'power2.in' }, 0.45)
+      .to(st, { zoom: 1, duration: 2.15, ease: 'power2.inOut' }, 0.35)
+      .to(st, { halo: 1.7, duration: 1.4, ease: 'power2.in' }, 0.55);
+  }
+
+  const stop = () => renderer.setAnimationLoop(null);
+  addEventListener('resize', () => { if (phase === 'gate' || phase === 'flight') frame(); });
+  return { intro, fly, stop, tex: photoTex };
+}
+
+/* ----------------------------------------------------- loader -> gate */
+const strokePath = $('#markPath');
+const markLen = strokePath.getTotalLength();
+const ldStroke = $('.ld-stroke');
+ldStroke.style.strokeDasharray = markLen;
+ldStroke.style.strokeDashoffset = markLen;
+const ld = { shown: 0, target: 0 };
+const pct = $('#ldPct');
+const tasks = [document.fonts ? document.fonts.ready : Promise.resolve(), new Promise(r => setTimeout(r, 1300))];
+let done = 0;
+const step = () => { done++; ld.target = done / (tasks.length + 1); };
+tasks.forEach(p => p.then(step, step));
+tasks[0].then(placeKnob);
+const ldTick = () => {
+  ld.shown += (ld.target - ld.shown) * 0.08;
+  ldStroke.style.strokeDashoffset = markLen * (1 - ld.shown);
+  pct.textContent = Math.round(ld.shown * 100);
+};
+gsap.ticker.add(ldTick);
+
+const timeout = ms => new Promise((_, no) => setTimeout(() => no(new Error('3D took too long')), ms));
+const webglReady = (reduced ? Promise.reject(new Error('reduced motion')) : Promise.race([initWebGL(), timeout(9000)]))
+  .then(api => { webgl = api; })
+  .catch(err => { console.info('2D fallback:', err.message); root.classList.add('no-webgl'); })
+  .finally(step);
+
+Promise.all([...tasks, webglReady]).then(() => {
+  if (window.__safiraGaveUp) return;
+  ld.target = 1;
+  window.__safiraReady = true;
+  gsap.timeline({ delay: 0.25 })
+    .to(ld, { shown: 1, duration: 0.5, ease: 'power2.out' })
+    .to('.ld-fill', { opacity: 1, duration: 0.45, ease: 'power2.out' })
+    .to('.ld-box', { scale: 0.86, opacity: 0, duration: 0.6, ease: 'power3.in' }, '+=0.15')
+    .to('#loader', { autoAlpha: 0, duration: 0.6, ease: 'power2.out', onComplete: () => { gsap.ticker.remove(ldTick); $('#loader').remove(); } }, '-=0.15')
+    .add(openGate, '-=0.55');
+});
+
+function openGate() {
+  phase = 'gate';
+  placeKnob();
+  const tl = gsap.timeline();
+  if (webgl) tl.add(webgl.intro(), 0);
+  else tl.fromTo('#mark2d', { opacity: 0, scale: 0.85, rotateY: -50 }, { opacity: 1, scale: 1, rotateY: -14, duration: 1.6, ease: 'expo.out' }, 0);
+  tl.fromTo('#gateUi .eyebrow', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45)
+    .add(revealChars($('.gate-title')), 0.55)
+    .fromTo('#gateUi .gate-actions', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' }, 1.25)
+    .fromTo(['#gateUi .gate-hint', '#skip'], { opacity: 0 }, { opacity: 1, duration: 0.9 }, 1.7)
+    .add(() => $('#enter').focus({ preventScroll: true }), 1.4);
+  if (!webgl && finePointer && !openGate.tilt) {
+    openGate.tilt = true;
+    const ry = gsap.quickTo('#mark2d', 'rotateY', { duration: 0.8, ease: 'power3' }), rx = gsap.quickTo('#mark2d', 'rotateX', { duration: 0.8, ease: 'power3' });
+    addEventListener('pointermove', e => { if (phase === 'gate') { ry(-14 + ((e.clientX / innerWidth) - 0.5) * 30); rx(((e.clientY / innerHeight) - 0.5) * -14); } });
+  }
+}
+
+/* ----------------------------------------------------------- the click */
+function hideGateUi(tl, at = 0) {
+  tl.to(['#gateUi .eyebrow', '.gate-title .w', '.gate-title .squiggle', '#gateUi .gate-actions', '#gateUi .gate-hint'], { opacity: 0, y: -26, duration: 0.5, stagger: 0.035, ease: 'power2.in' }, at)
+    .to('#skip', { opacity: 0, duration: 0.3 }, at);
+}
+function enter() {
+  if (phase !== 'gate') return;
+  phase = 'flight';
+  navigator.vibrate?.(14);
+  const tl = gsap.timeline({ onComplete: handoff });
+  hideGateUi(tl);
+  if (webgl) tl.add(webgl.fly(), 0.05);
+  else if (!reduced) {
+    // 2D: the arch opens into the lobby
+    gsap.set('#portal2d', { visibility: 'visible' });
+    tl.to('#mark2d', { scale: 5, opacity: 0, duration: 1.3, ease: 'expo.in' }, 0.25)
+      .fromTo('#portal2d', { clipPath: 'inset(42% 40% 30% 40% round 300px 300px 0px 0px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px 0px 0px 0px)', duration: 1.4, ease: 'expo.inOut' }, 0.3);
+  } else tl.to('#gateBg', { opacity: 0, duration: 0.5 }, 0.2);
+}
+function handoff() {
+  phase = 'lobby';
+  gsap.set('#lobbyImg', { scale: 1 });
+  $('#gate').classList.add('done');
+  gsap.set('#gateBg', { autoAlpha: 0 });
+  gsap.to(['#webgl', '#vignette', '#portal2d', '#mark2d'], {
+    autoAlpha: 0, duration: 0.7, ease: 'power1.out',
+    onComplete: () => { webgl?.stop(); gsap.set('#portal2d', { visibility: 'hidden' }); },
+  });
+  root.classList.remove('locked');
+  lenis.start();
+  ScrollTrigger.refresh();
+  arrive();
+}
+function arrive() {
+  const tl = gsap.timeline();
+  tl.add(revealChars($('.lobby-title')), 0.15)
+    .fromTo('#sticker', { scale: 0, rotate: -28, opacity: 0 }, { scale: 1, rotate: -5, opacity: 1, duration: 1.1, ease: 'elastic.out(1,0.55)' }, 0.9)
+    .fromTo('#scrollCue', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 1.3);
+  if (!reduced) gsap.fromTo('#lobbyImg', { scale: 1 }, { scale: 1.07, duration: 9, ease: 'none' });
+}
+$('#enter').addEventListener('click', enter);
+$('#skip').addEventListener('click', () => {
+  if (phase !== 'gate') return;
+  phase = 'flight';
+  const tl = gsap.timeline({ onComplete: handoff });
+  hideGateUi(tl);
+});
+addEventListener('keydown', e => { if (e.key === 'Escape' && phase === 'gate') $('#skip').click(); });
+
+/* the runaway "nggak kepo" button */
+const nope = $('#nope');
+function dodge() {
+  if (nope.classList.contains('give-up')) return;
+  dodges++;
+  nope.textContent = NOPE[dodges];
+  if (dodges === NOPE.length - 1) {
+    nope.classList.add('give-up');
+    gsap.to(nope, { x: 0, y: 0, rotate: 0, duration: 0.9, ease: 'elastic.out(1,0.5)' });
+    return;
+  }
+  const r = nope.getBoundingClientRect(), cx = gsap.getProperty(nope, 'x'), cy = gsap.getProperty(nope, 'y');
+  const homeL = r.left - cx, homeT = r.top - cy;
+  const tx = gsap.utils.random(24, innerWidth - r.width - 24) - homeL;
+  const ty = gsap.utils.random(innerHeight * 0.18, innerHeight - r.height - 90) - homeT;
+  gsap.to(nope, { x: tx, y: ty, rotate: gsap.utils.random(-14, 14), duration: 0.6, ease: 'power3.out' });
+}
+nope.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') dodge(); });
+nope.addEventListener('click', () => { if (nope.classList.contains('give-up')) enter(); else dodge(); });
+
+/* --------------------------------------------------- lobby scroll scene */
+const mm = gsap.matchMedia();
+mm.add({ desk: '(min-width: 821px)', mob: '(max-width: 820px)' }, ctx => {
+  const { desk } = ctx.conditions;
+  const aw = desk ? 0.36 : 0.74, ah = desk ? 0.76 : 0.5;
+  const il = desk ? 0.56 : (1 - aw) / 2, it = desk ? 0.12 : 0.1;
+  const ir = 1 - il - aw, ib = 1 - it - ah;
+  const pc = v => (v * 100).toFixed(2) + '%';
+  const rad = () => (aw * $('#lobbyPin').clientWidth) / 2 + 'px';
+  const tl = gsap.timeline({
+    scrollTrigger: { trigger: '#lobbyPin', start: 'top top', end: '+=230%', scrub: 1, pin: true, anticipatePin: 1, invalidateOnRefresh: true },
+    defaults: { ease: 'none' },
+  });
+  tl.to('#scrollCue', { opacity: 0, duration: 0.06 }, 0)
+    .to('#lobbyCopy', { yPercent: -40, opacity: 0, duration: 0.22, ease: 'power2.in' }, 0.02)
+    .to('#lobbyMedia', { '--it': pc(it), '--ir': pc(ir), '--ib': pc(ib), '--il': pc(il), duration: 0.42, ease: 'power2.inOut' }, 0.06)
+    .to('#lobbyMedia', { '--rad': rad, '--rb': '26px', duration: 0.24, ease: 'power2.out' }, 0.06)
+    .fromTo('#archFrame', { opacity: 0, scale: 1.05 }, { opacity: 1, scale: 1, duration: 0.14, ease: 'power2.out' }, 0.4)
+    .to('#lobbyShift', { x: () => (desk ? (il + aw / 2 - 0.5) * innerWidth : 0), y: () => (desk ? 0 : (it + ah / 2 - 0.5) * innerHeight), scale: desk ? 0.92 : 0.9, duration: 0.42, ease: 'power2.inOut' }, 0.06)
+    .to('#lobbyShade', { opacity: 0, duration: 0.3 }, 0.1)
+    .fromTo('#ondel', { y: 140, scale: 0.55, rotate: -16, opacity: 0 }, { y: 0, scale: 1, rotate: -4, opacity: 1, duration: 0.16, ease: 'back.out(1.8)' }, 0.44)
+    .fromTo('#bubble', { scale: 0.5, opacity: 0, transformOrigin: '0% 100%' }, { scale: 1, opacity: 1, duration: 0.12, ease: 'back.out(2.2)' }, 0.54)
+    .fromTo('#bubble .small', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.1 }, 0.62)
+    .to('#lobbyShift', { scale: desk ? 0.98 : 0.96, duration: 0.3 }, 0.7);
+});
+if (!reduced) gsap.fromTo('#ondelWave', { rotate: -7 }, { rotate: 7, duration: 0.85, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+
+$$('.reveal-up').forEach(el => gsap.fromTo(el, { opacity: 0, y: 50 }, {
+  opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
+  scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none reverse' },
+}));
+
+/* -------------------------------------------------------------- replay */
+$('#replay').addEventListener('click', () => {
+  lenis.scrollTo(0, { immediate: true, force: true });
+  lenis.stop();
+  root.classList.add('locked');
+  dodges = 0;
+  nope.classList.remove('give-up');
+  nope.textContent = NOPE[0];
+  gsap.set(nope, { x: 0, y: 0, rotate: 0 });
+  gsap.set(['#webgl', '#vignette', '#gateBg'], { autoAlpha: 1 });
+  gsap.set(['#gateUi .eyebrow', '.gate-title .w', '.gate-title .squiggle', '#gateUi .gate-actions', '#gateUi .gate-hint', '#skip'], { clearProps: 'all' });
+  gsap.set(['#gateUi .eyebrow', '#gateUi .gate-actions', '#gateUi .gate-hint', '#skip'], { opacity: 0 });
+  gsap.set('.gate-title .c', { opacity: 0 });
+  $$('.gate-title .squiggle path').forEach(p => { p.style.strokeDashoffset = p.getTotalLength(); });
+  gsap.set('#mark2d', { clearProps: 'all' });
+  gsap.set('#langWipe', { autoAlpha: 0 });
+  gsap.set(['#sticker', '#scrollCue'], { opacity: 0 });
+  gsap.set('.lobby-title .c', { opacity: 0 });
+  $('#gate').classList.remove('done');
+  ScrollTrigger.refresh();
+  openGate();
+});
+
+let rz;
+addEventListener('resize', () => {
+  setVH();
+  placeKnob();
+  clearTimeout(rz);
+  rz = setTimeout(() => ScrollTrigger.refresh(), 200);
+});
+</script>
+</body>
+</html>
