@@ -33,8 +33,8 @@ Untuk mengganti foto: ganti file di folder `images/` dengan nama yang sama, atau
 Landing page bercerita lewat scroll, dengan tombol bahasa **gaul / ortu**. Bisa dibuka di `https://safirahalim.com/kepo/` (halaman ini `noindex`, jadi tidak muncul di Google).
 
 Urutan adegan:
-1. **Gerbang kepo**: logo Safira 3D, tombol "nggak kepo" yang kabur, cahaya hangat di balik pintu.
-2. **Masuk lewat pintu**: kamera terbang menembus lengkungan logo ke arah cahaya.
+1. **Gerbang kepo**: logo Safira 3D dengan pintu (lengkungan) transparan, tombol "nggak kepo" yang kabur.
+2. **Masuk lewat pintu**: kamera terbang menembus lengkungan logo, lobi muncul perlahan saat melewati pintu.
 3. **Lobi**: foto lobi berubah jadi bingkai lengkung, stiker ondel-ondel.
 4. **Lokasi**: peta waktu tempuh (5/10/15 menit), pesawat mendarat di Halim.
 5. **Kamar**: kartu geser ke samping, bisa dibalik untuk melihat harga & fasilitas.
